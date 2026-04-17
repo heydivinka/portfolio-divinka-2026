@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { clsx } from 'clsx'
+import { useEffect, useState } from 'react'
 import {
   FaEnvelope,
   FaGithub,
@@ -8,6 +9,8 @@ import {
   FaExternalLinkAlt,
   FaCertificate,
   FaCode,
+  FaMoon,
+  FaSun,
 } from 'react-icons/fa'
 
 type SkillCategory = {
@@ -82,28 +85,58 @@ function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) 
 }
 
 export default function App() {
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme === 'dark') {
+      setIsDark(true)
+      return
+    }
+    if (savedTheme === 'light') {
+      setIsDark(false)
+      return
+    }
+    setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches)
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark)
+    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+  }, [isDark])
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="pointer-events-none fixed inset-0 bg-mesh-gradient" />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(14,165,233,.14),transparent_36%)]" />
+    <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="soft-cursor-light pointer-events-none fixed inset-0 dark:hidden" />
+      <div className="soft-cursor-dark pointer-events-none fixed inset-0 hidden dark:block" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(0,0,0,.08),transparent_50%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,.08),transparent_55%)]" />
+
+      <button
+        type="button"
+        onClick={() => setIsDark((prev) => !prev)}
+        className="fixed right-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white/90 px-3 py-2 text-xs font-medium text-zinc-700 backdrop-blur transition hover:bg-white dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-200 dark:hover:bg-zinc-900 sm:right-6 sm:top-6"
+      >
+        {isDark ? <FaSun /> : <FaMoon />}
+        {isDark ? 'Light' : 'Dark'}
+      </button>
 
       <main className="relative mx-auto max-w-6xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
         <motion.section
-          className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-glow backdrop-blur-xl sm:p-10"
+          className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10"
           variants={container}
           initial="hidden"
           animate="show"
         >
-          <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-sky-300">
+          <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
             Portfolio
           </motion.p>
           <motion.h1
             variants={item}
-            className="mt-3 max-w-3xl text-3xl font-semibold leading-tight text-white sm:text-5xl"
+            className="mt-3 max-w-3xl text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl"
           >
             Hi, I&apos;m Your Name. I build modern and animated web experiences.
           </motion.h1>
-          <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-slate-300 sm:text-base">
+          <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
             Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
             responsive UI inspired by award-winning websites.
           </motion.p>
@@ -111,7 +144,7 @@ export default function App() {
             {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-sky-300/30 bg-sky-400/10 px-3 py-1 text-xs text-sky-100"
+                className="rounded-full border border-zinc-300 bg-zinc-200/70 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
               >
                 {tag}
               </span>
@@ -133,13 +166,13 @@ export default function App() {
               <motion.div
                 key={skill.title}
                 variants={item}
-                className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur"
+                className="rounded-2xl border border-zinc-200 bg-white/75 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70"
               >
-                <h3 className="text-lg font-medium text-white">{skill.title}</h3>
-                <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">{skill.title}</h3>
+                <ul className="mt-3 space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
                   {skill.items.map((entry) => (
                     <li key={entry} className="flex items-center gap-2">
-                      <FaCode className="text-xs text-sky-300" />
+                      <FaCode className="text-xs text-zinc-500 dark:text-zinc-400" />
                       {entry}
                     </li>
                   ))}
@@ -163,7 +196,7 @@ export default function App() {
           />
           <motion.div
             variants={item}
-            className="overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-xl"
+            className="overflow-hidden rounded-2xl border border-zinc-200 bg-black shadow-xl dark:border-zinc-800"
           >
             <div className="aspect-video w-full">
               <iframe
@@ -198,24 +231,24 @@ export default function App() {
                 variants={item}
                 href={project.url}
                 className={clsx(
-                  'group rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur transition',
-                  'hover:-translate-y-1 hover:border-sky-300/40 hover:bg-white/10',
+                  'group rounded-2xl border border-zinc-200 bg-white/75 p-5 backdrop-blur transition dark:border-zinc-800 dark:bg-zinc-900/70',
+                  'hover:-translate-y-1 hover:border-zinc-400 hover:bg-white dark:hover:border-zinc-600 dark:hover:bg-zinc-900',
                   index === 0 && 'sm:col-span-2 xl:col-span-1',
                 )}
               >
-                <h3 className="text-lg font-semibold text-white">{project.title}</h3>
-                <p className="mt-2 text-sm text-slate-300">{project.description}</p>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{project.title}</h3>
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{project.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.tech.map((stack) => (
                     <span
                       key={stack}
-                      className="rounded-full border border-purple-300/25 bg-purple-400/10 px-2.5 py-1 text-xs text-purple-100"
+                      className="rounded-full border border-zinc-300 bg-zinc-200/70 px-2.5 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
                     >
                       {stack}
                     </span>
                   ))}
                 </div>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm text-sky-300">
+                <span className="mt-5 inline-flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                   View project <FaExternalLinkAlt className="text-xs transition group-hover:translate-x-0.5" />
                 </span>
               </motion.a>
@@ -240,10 +273,10 @@ export default function App() {
               <motion.article
                 key={cert}
                 variants={item}
-                className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200"
+                className="rounded-xl border border-zinc-200 bg-white/75 p-4 text-sm text-zinc-700 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300"
               >
                 <p className="flex items-start gap-2">
-                  <FaCertificate className="mt-0.5 text-amber-300" />
+                  <FaCertificate className="mt-0.5 text-zinc-500 dark:text-zinc-400" />
                   {cert}
                 </p>
               </motion.article>
@@ -253,7 +286,7 @@ export default function App() {
 
         <motion.section
           id="contact"
-          className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8"
+          className="mt-12 rounded-3xl border border-zinc-200 bg-zinc-100/70 p-6 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-8"
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -281,7 +314,7 @@ export default function App() {
         </motion.section>
       </main>
 
-      <footer className="relative border-t border-white/10 py-6 text-center text-xs text-slate-400">
+      <footer className="relative border-t border-zinc-200 py-6 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
         <p>© {new Date().getFullYear()} Your Name. Crafted with React, TypeScript, Node.js, Tailwind, and Framer Motion.</p>
       </footer>
     </div>
