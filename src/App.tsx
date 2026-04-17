@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
 import { clsx } from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   FaEnvelope,
   FaGithub,
@@ -106,6 +106,24 @@ function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) 
 
 export default function App() {
   const [isDark, setIsDark] = useState(false)
+  const [typedTitle, setTypedTitle] = useState('')
+  const heroSectionRef = useRef<HTMLElement | null>(null)
+  const heroTextRef = useRef<HTMLDivElement | null>(null)
+  const heroTitle = "Hi, I'm Divinka. I build modern and animated web experiences."
+  const { scrollYProgress: pageScrollYProgress } = useScroll()
+
+  const { scrollYProgress } = useScroll({
+    target: heroSectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const heroSubOpacity = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [1, 0.85, 0.45, 0.1])
+  const heroSubSaturate = useTransform(scrollYProgress, [0, 1], [1, 0.35])
+  const heroSubFilter = useMotionTemplate`saturate(${heroSubSaturate})`
+
+  const pageTextOpacity = useTransform(pageScrollYProgress, [0, 0.65, 1], [1, 0.9, 0.82])
+  const pageTextSaturate = useTransform(pageScrollYProgress, [0, 1], [1, 0.82])
+  const pageTextFilter = useMotionTemplate`saturate(${pageTextSaturate})`
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -125,6 +143,20 @@ export default function App() {
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
   }, [isDark])
 
+  useEffect(() => {
+    let index = 0
+    setTypedTitle('')
+    const timer = window.setInterval(() => {
+      index += 1
+      setTypedTitle(heroTitle.slice(0, index))
+      if (index >= heroTitle.length) {
+        window.clearInterval(timer)
+      }
+    }, 28)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
   return (
     <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors dark:bg-zinc-950 dark:text-zinc-100">
       <div className="soft-cursor-light pointer-events-none fixed inset-0 dark:hidden" />
@@ -140,51 +172,54 @@ export default function App() {
         {isDark ? 'Light' : 'Dark'}
       </button>
 
-      <main className="relative mx-auto max-w-6xl px-4 pb-12 pt-20 sm:px-6 sm:pt-24 lg:px-8 lg:pt-10">
+      <motion.main
+        style={{ opacity: pageTextOpacity, filter: pageTextFilter }}
+        className="relative mx-auto max-w-6xl px-4 pb-12 pt-20 sm:px-6 sm:pt-24 lg:px-8 lg:pt-10"
+      >
         <motion.section
+          ref={heroSectionRef}
           className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10"
           variants={container}
           initial="hidden"
           animate="show"
         >
-          <div className="grid gap-7 lg:grid-cols-[180px_1fr] lg:items-center">
-            <motion.div variants={item} className="mx-auto w-full max-w-[180px] lg:mx-0">
-              <div className="rounded-[26px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_16px_44px_rgba(0,0,0,0.13)] dark:border-zinc-700 dark:bg-zinc-800">
-                <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
-                  <img
-                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
-                    alt="Profile"
-                    className="h-full w-full object-cover grayscale"
-                  />
+          <div className="mx-auto w-full max-w-4xl">
+              <motion.div variants={item} className="mb-5 w-full max-w-[150px] sm:max-w-[170px]">
+                <div className="rounded-[22px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-zinc-700 dark:bg-zinc-800">
+                  <div className="aspect-[4/5] overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
+                    <img
+                      src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
+                      alt="Profile"
+                      className="h-full w-full object-cover grayscale"
+                    />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-
-            <div>
+              </motion.div>
               <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
                 Portfolio
               </motion.p>
-              <motion.h1
-                variants={item}
-                className="mt-3 max-w-3xl text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl"
+              <h1 className="mt-4 max-w-xl text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 sm:mt-5 sm:text-5xl">
+                <span className="typing-caret">{typedTitle}</span>
+              </h1>
+              <motion.div
+                ref={heroTextRef}
+                style={{ opacity: heroSubOpacity, filter: heroSubFilter }}
               >
-                Hi, I&apos;m Your Name. I build modern and animated web experiences.
-              </motion.h1>
-              <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
-                Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
-                responsive UI inspired by award-winning websites.
-              </motion.p>
-              <motion.div variants={item} className="mt-6 flex flex-wrap gap-3">
-                {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-zinc-300 bg-zinc-200/70 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
+                  Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
+                  responsive UI inspired by award-winning websites.
+                </motion.p>
+                <motion.div variants={item} className="mt-6 flex flex-wrap gap-3">
+                  {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-zinc-300 bg-zinc-200/70 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </motion.div>
               </motion.div>
-            </div>
           </div>
         </motion.section>
 
@@ -374,7 +409,7 @@ export default function App() {
             </a>
           </motion.div>
         </motion.section>
-      </main>
+      </motion.main>
 
       <footer className="relative border-t border-zinc-200 py-6 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
         <p>© {new Date().getFullYear()} Your Name. Crafted with React, TypeScript, Node.js, Tailwind, and Framer Motion.</p>
