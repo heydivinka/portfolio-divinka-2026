@@ -54,3 +54,57 @@ body {
     --y: 84%;
   }
 }
+
+.logo-marquee-viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.logo-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: logoFlow 20s linear infinite;
+}
+
+.logo-marquee-viewport:hover .logo-marquee-track {
+  animation-play-state: paused;
+}
+
+.logo-marquee-group {
+  display: flex;
+  align-items: center;
+}
+
+.logo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-right: 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(212 212 216);
+  background: rgb(255 255 255 / 0.95);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.dark .logo-chip {
+  border-color: rgb(63 63 70);
+  background: rgb(39 39 42 / 0.8);
+}
+
+@keyframes logoFlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .logo-marquee-track {
+    animation-duration: 24s;
+  }
+}

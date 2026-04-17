@@ -11,7 +11,14 @@ import {
   FaCode,
   FaMoon,
   FaSun,
+  FaReact,
+  FaNodeJs,
+  FaHtml5,
+  FaCss3Alt,
+  FaGitAlt,
+  FaFigma,
 } from 'react-icons/fa'
+import { SiTypescript, SiTailwindcss, SiFramer, SiMongodb } from 'react-icons/si'
 
 type SkillCategory = {
   title: string
@@ -58,6 +65,19 @@ const certificates = [
   'Responsive Web Design Certification',
 ]
 
+const techMarquee = [
+  { name: 'TypeScript', icon: SiTypescript, color: 'text-[#3178C6]' },
+  { name: 'React', icon: FaReact, color: 'text-[#61DAFB]' },
+  { name: 'Node.js', icon: FaNodeJs, color: 'text-[#5FA04E]' },
+  { name: 'Tailwind CSS', icon: SiTailwindcss, color: 'text-[#06B6D4]' },
+  { name: 'Framer Motion', icon: SiFramer, color: 'text-[#0055FF]' },
+  { name: 'MongoDB', icon: SiMongodb, color: 'text-[#47A248]' },
+  { name: 'HTML5', icon: FaHtml5, color: 'text-[#E34F26]' },
+  { name: 'CSS3', icon: FaCss3Alt, color: 'text-[#1572B6]' },
+  { name: 'Git', icon: FaGitAlt, color: 'text-[#F05032]' },
+  { name: 'Figma', icon: FaFigma, color: 'text-[#A259FF]' },
+]
+
 const container = {
   hidden: { opacity: 0, y: 20 },
   show: {
@@ -78,8 +98,8 @@ const item = {
 function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="mb-6 sm:mb-8">
-      <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">{title}</h2>
-      <p className="mt-2 max-w-2xl text-sm text-slate-300 sm:text-base">{subtitle}</p>
+      <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl">{title}</h2>
+      <p className="mt-2 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">{subtitle}</p>
     </div>
   )
 }
@@ -120,35 +140,77 @@ export default function App() {
         {isDark ? 'Light' : 'Dark'}
       </button>
 
-      <main className="relative mx-auto max-w-6xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+      <main className="relative mx-auto max-w-6xl px-4 pb-12 pt-20 sm:px-6 sm:pt-24 lg:px-8 lg:pt-10">
         <motion.section
           className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10"
           variants={container}
           initial="hidden"
           animate="show"
         >
-          <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
-            Portfolio
-          </motion.p>
-          <motion.h1
-            variants={item}
-            className="mt-3 max-w-3xl text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl"
-          >
-            Hi, I&apos;m Your Name. I build modern and animated web experiences.
-          </motion.h1>
-          <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
-            Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
-            responsive UI inspired by award-winning websites.
-          </motion.p>
-          <motion.div variants={item} className="mt-6 flex flex-wrap gap-3">
-            {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-zinc-300 bg-zinc-200/70 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+          <div className="grid gap-7 lg:grid-cols-[180px_1fr] lg:items-center">
+            <motion.div variants={item} className="mx-auto w-full max-w-[180px] lg:mx-0">
+              <div className="rounded-[26px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_16px_44px_rgba(0,0,0,0.13)] dark:border-zinc-700 dark:bg-zinc-800">
+                <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
+                    alt="Profile"
+                    className="h-full w-full object-cover grayscale"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            <div>
+              <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
+                Portfolio
+              </motion.p>
+              <motion.h1
+                variants={item}
+                className="mt-3 max-w-3xl text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl"
               >
-                {tag}
-              </span>
-            ))}
+                Hi, I&apos;m Your Name. I build modern and animated web experiences.
+              </motion.h1>
+              <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
+                Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
+                responsive UI inspired by award-winning websites.
+              </motion.p>
+              <motion.div variants={item} className="mt-6 flex flex-wrap gap-3">
+                {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-zinc-300 bg-zinc-200/70 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </motion.section>
+
+        <motion.section
+          className="mt-6 rounded-2xl border border-zinc-200 bg-white/80 py-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.5 }}
+        >
+          <motion.div variants={item} className="logo-marquee-viewport">
+            <div className="logo-marquee-track">
+              {[techMarquee, techMarquee].map((group, groupIndex) => (
+                <div key={`group-${groupIndex}`} className="logo-marquee-group" aria-hidden={groupIndex === 1}>
+                  {group.map((tech) => {
+                    const Icon = tech.icon
+                    return (
+                      <div key={`${tech.name}-${groupIndex}`} className="logo-chip">
+                        <Icon className={clsx('text-lg', tech.color)} />
+                        <span className="text-zinc-700 dark:text-zinc-200">{tech.name}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              ))}
+            </div>
           </motion.div>
         </motion.section>
 
