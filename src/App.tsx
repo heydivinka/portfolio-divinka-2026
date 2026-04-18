@@ -36,6 +36,11 @@ export default function App() {
   const [visibleCertificates, setVisibleCertificates] = useState(3)
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [formErrors, setFormErrors] = useState({
+    name: false,
+    email: false,
+    message: false
+  })
   const [statusModalConfig, setStatusModalConfig] = useState<{
     isOpen: boolean
     type: 'success' | 'error'
@@ -81,9 +86,26 @@ export default function App() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
-    if (!contactName.trim() || !emailRegex.test(contactEmail) || contactMessage.trim().length < 5) {
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    
+    const errors = {
+      name: !contactName.trim(),
+      email: !emailRegex.test(contactEmail),
+      message: contactMessage.trim().length < 5
+    }
+
+    setFormErrors(errors)
+
+    if (errors.name || errors.email || errors.message) {
       setSubmitStatus('error')
+      setStatusModalConfig({
+        isOpen: true,
+        type: 'error',
+        title: errors.email ? 'Invalid Email Address' : 'Check your inputs',
+        message: errors.email 
+          ? 'The email address you entered is not valid. Please double-check it.'
+          : 'Please make sure all fields are filled correctly and the message is at least 5 characters long.'
+      })
       setTimeout(() => setSubmitStatus('idle'), 3000)
       return
     }
@@ -140,6 +162,25 @@ export default function App() {
     }
     setTimeout(() => setSubmitStatus('idle'), 4000)
   }
+
+  useEffect(() => {
+    if (contactName.trim() && formErrors.name) {
+      setFormErrors(prev => ({ ...prev, name: false }))
+    }
+  }, [contactName])
+
+  useEffect(() => {
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    if (emailRegex.test(contactEmail) && formErrors.email) {
+      setFormErrors(prev => ({ ...prev, email: false }))
+    }
+  }, [contactEmail])
+
+  useEffect(() => {
+    if (contactMessage.trim().length >= 5 && formErrors.message) {
+      setFormErrors(prev => ({ ...prev, message: false }))
+    }
+  }, [contactMessage])
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -203,14 +244,25 @@ export default function App() {
         <ContactSection 
           handleSubmit={async (e) => {
             e.preventDefault()
-            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
-            if (!contactName.trim() || !emailRegex.test(contactEmail) || contactMessage.trim().length < 5) {
+            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+            
+            const errors = {
+              name: !contactName.trim(),
+              email: !emailRegex.test(contactEmail),
+              message: contactMessage.trim().length < 5
+            }
+
+            setFormErrors(errors)
+
+            if (errors.name || errors.email || errors.message) {
               setSubmitStatus('error')
               setStatusModalConfig({
                 isOpen: true,
                 type: 'error',
-                title: 'Check your inputs',
-                message: 'Please make sure all fields are filled correctly and the message is at least 5 characters long.'
+                title: errors.email ? 'Invalid Email Address' : 'Check your inputs',
+                message: errors.email 
+                  ? 'The email address you entered is not valid. Please double-check it.'
+                  : 'Please make sure all fields are filled correctly and the message is at least 5 characters long.'
               })
               setTimeout(() => setSubmitStatus('idle'), 3000)
               return
@@ -224,6 +276,7 @@ export default function App() {
           contactMessage={contactMessage}
           setContactMessage={setContactMessage}
           submitStatus={submitStatus}
+          formErrors={formErrors}
         />
       </motion.main>
 

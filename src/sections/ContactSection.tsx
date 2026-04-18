@@ -13,6 +13,11 @@ interface ContactSectionProps {
   contactMessage: string
   setContactMessage: (val: string) => void
   submitStatus: 'idle' | 'loading' | 'success' | 'error'
+  formErrors: {
+    name: boolean
+    email: boolean
+    message: boolean
+  }
 }
 
 export function ContactSection({
@@ -23,7 +28,8 @@ export function ContactSection({
   setContactEmail,
   contactMessage,
   setContactMessage,
-  submitStatus
+  submitStatus,
+  formErrors
 }: ContactSectionProps) {
   return (
     <motion.section
@@ -110,6 +116,7 @@ export function ContactSection({
                 icon={<FaUser />}
                 value={contactName}
                 onChange={setContactName}
+                error={formErrors.name}
               />
               <ContactInput
                 label="Email"
@@ -117,6 +124,7 @@ export function ContactSection({
                 icon={<FaEnvelope />}
                 value={contactEmail}
                 onChange={setContactEmail}
+                error={formErrors.email}
               />
               <ContactInput
                 label="Message"
@@ -126,6 +134,7 @@ export function ContactSection({
                 icon={<FaCommentDots />}
                 value={contactMessage}
                 onChange={setContactMessage}
+                error={formErrors.message}
               />
 
               <motion.button
