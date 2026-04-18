@@ -21,6 +21,8 @@ export function ProjectCard({ project, index, variants }: ProjectCardProps) {
   return (
     <motion.a
       variants={variants}
+      initial="hidden"
+      animate="show"
       whileHover={{ y: -10, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       href={project.url}

@@ -32,6 +32,7 @@ import { SkillCard } from './components/SkillCard'
 import { TimelineItem } from './components/TimelineItem'
 import { ContactInput } from './components/ContactInput'
 import { supabase } from './lib/supabase'
+import { ProjectCardSkeleton, CertificateCardSkeleton } from './components/Skeletons'
 
 type SkillCategory = {
   title: string
@@ -102,48 +103,6 @@ const skillCategories: SkillCategory[] = [
   { title: 'Tooling', items: ['Git', 'Vite', 'Figma', 'Postman'] },
 ]
 
-const DEFAULT_PROJECTS: Project[] = [
-  {
-    title: 'Animated Landing Page',
-    description: 'High-converting product page with smooth section transitions and mobile-first UX.',
-    tech: ['React', 'TypeScript', 'Framer Motion'],
-    url: '#',
-    image: 'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    title: 'Portfolio CMS',
-    description: 'Portfolio manager with CRUD dashboard and role-based access for managing projects.',
-    tech: ['Node.js', 'Express', 'MongoDB'],
-    url: '#',
-    image: 'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    title: 'UI Component Library',
-    description: 'Reusable design system components inspired by award-winning product websites.',
-    tech: ['React', 'Tailwind CSS', 'Storybook'],
-    url: '#',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
-  },
-]
-
-const DEFAULT_CERTIFICATES: Certificate[] = [
-  {
-    title: 'Meta Front-End Developer Certificate',
-    url: '#',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg',
-  },
-  {
-    title: 'JavaScript Algorithms and Data Structures',
-    url: '#',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg',
-  },
-  {
-    title: 'Responsive Web Design Certification',
-    url: '#',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg',
-  },
-]
-
 const techMarquee = [
   { name: 'TypeScript', icon: SiTypescript, color: 'text-[#3178C6]' },
   { name: 'React', icon: FaReact, color: 'text-[#61DAFB]' },
@@ -194,8 +153,8 @@ export default function App() {
   const [typedTitle, setTypedTitle] = useState('')
   const [contactName, setContactName] = useState('')
   const [contactMessage, setContactMessage] = useState('')
-  const [projects, setProjects] = useState<Project[]>(DEFAULT_PROJECTS)
-  const [certificates, setCertificates] = useState<Certificate[]>(DEFAULT_CERTIFICATES)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [certificates, setCertificates] = useState<Certificate[]>([])
   const [visibleProjects, setVisibleProjects] = useState(3)
   const [visibleCertificates, setVisibleCertificates] = useState(3)
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking')
@@ -215,8 +174,8 @@ export default function App() {
 
         if (projectsError || certsError) throw projectsError || certsError
 
-        if (projectsData && projectsData.length > 0) setProjects(projectsData)
-        if (certsData && certsData.length > 0) setCertificates(certsData)
+        setProjects(projectsData || [])
+        setCertificates(certsData || [])
         
         setDbStatus('connected')
       } catch (err) {
@@ -475,14 +434,24 @@ export default function App() {
             variants={itemVariants}
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.slice(0, visibleProjects).map((project, index) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                variants={itemVariants}
-              />
-            ))}
+            {dbStatus === 'checking' ? (
+              [...Array(3)].map((_, i) => (
+                <ProjectCardSkeleton key={i} />
+              ))
+            ) : projects.length > 0 ? (
+              projects.slice(0, visibleProjects).map((project, index) => (
+                <ProjectCard
+                  key={project.title}
+                  project={project}
+                  index={index}
+                  variants={itemVariants}
+                />
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center">
+                <p className="text-zinc-500">No projects found in the database.</p>
+              </div>
+            )}
           </div>
 
           {projects.length > visibleProjects && (
@@ -512,29 +481,41 @@ export default function App() {
             variants={itemVariants}
           />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {certificates.slice(0, visibleCertificates).map((cert) => (
-              <motion.a
-                key={cert.title}
-                href={cert.url}
-                target="_blank"
-                rel="noreferrer"
-                variants={itemVariants}
-                whileHover={{ scale: 1.02, y: -4 }}
-                className="group flex flex-col items-center gap-4 rounded-2xl border border-zinc-200 bg-white/75 p-6 text-center backdrop-blur transition-all hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/70"
-              >
-                {cert.logo && (
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-2 shadow-sm dark:bg-zinc-800">
-                    <img src={cert.logo} alt={cert.title} className="h-full w-full object-contain" />
-                  </div>
-                )}
-                <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
-                  {cert.title}
-                </p>
-                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300 transition-colors">
-                  View Certificate
-                </span>
-              </motion.a>
-            ))}
+            {dbStatus === 'checking' ? (
+              [...Array(3)].map((_, i) => (
+                <CertificateCardSkeleton key={i} />
+              ))
+            ) : certificates.length > 0 ? (
+              certificates.slice(0, visibleCertificates).map((cert) => (
+                <motion.a
+                  key={cert.title}
+                  href={cert.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="show"
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  className="group flex flex-col items-center gap-4 rounded-2xl border border-zinc-200 bg-white/75 p-6 text-center backdrop-blur transition-all hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/70"
+                >
+                  {cert.logo && (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-2 shadow-sm dark:bg-zinc-800">
+                      <img src={cert.logo} alt={cert.title} className="h-full w-full object-contain" />
+                    </div>
+                  )}
+                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
+                    {cert.title}
+                  </p>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300 transition-colors">
+                    View Certificate
+                  </span>
+                </motion.a>
+              ))
+            ) : (
+              <div className="col-span-full py-10 text-center">
+                <p className="text-zinc-500">No certificates found.</p>
+              </div>
+            )}
           </div>
 
           {certificates.length > visibleCertificates && (
