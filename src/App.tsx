@@ -16,6 +16,7 @@ import { VideoSection } from './sections/VideoSection'
 import { ProjectsSection } from './sections/ProjectsSection'
 import { CertificatesSection } from './sections/CertificatesSection'
 import { ContactSection } from './sections/ContactSection'
+import { ConfirmationModal } from './components/ConfirmationModal'
 
 // Lib
 import { supabase } from './lib/supabase'
@@ -32,6 +33,7 @@ export default function App() {
   const [visibleProjects, setVisibleProjects] = useState(3)
   const [visibleCertificates, setVisibleCertificates] = useState(3)
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { scrollYProgress: pageScrollYProgress } = useScroll()
   const pageTextOpacity = useTransform(pageScrollYProgress, [0, 0.65, 1], [1, 0.9, 0.82])
@@ -118,7 +120,7 @@ export default function App() {
       <button
         type="button"
         onClick={() => setIsDark((prev) => !prev)}
-        className="fixed right-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white/90 px-3 py-2 text-xs font-medium text-zinc-700 backdrop-blur transition hover:bg-white dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-200 dark:hover:bg-zinc-900 sm:right-6 sm:top-6"
+        className="fixed right-4 top-4 z-[10001] inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white/90 px-3 py-2 text-xs font-medium text-zinc-700 backdrop-blur transition hover:bg-white dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-200 dark:hover:bg-zinc-900 sm:right-6 sm:top-6"
       >
         {isDark ? <FaSun /> : <FaMoon />}
         {isDark ? 'Light' : 'Dark'}
@@ -150,7 +152,16 @@ export default function App() {
         />
 
         <ContactSection 
-          handleSubmit={handleSubmit}
+          handleSubmit={async (e) => {
+            e.preventDefault()
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+            if (!contactName.trim() || !emailRegex.test(contactEmail) || contactMessage.trim().length < 5) {
+              setSubmitStatus('error')
+              setTimeout(() => setSubmitStatus('idle'), 3000)
+              return
+            }
+            setIsModalOpen(true)
+          }}
           contactName={contactName}
           setContactName={setContactName}
           contactEmail={contactEmail}
@@ -158,12 +169,23 @@ export default function App() {
           contactMessage={contactMessage}
           setContactMessage={setContactMessage}
           submitStatus={submitStatus}
+          setIsModalOpen={setIsModalOpen}
         />
       </motion.main>
 
       <footer className="relative mt-20 border-t border-zinc-200 py-12 text-center text-sm font-medium text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
         <p>© {new Date().getFullYear()} Divinka. Crafted with React, TypeScript, Tailwind, and Framer Motion.</p>
       </footer>
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          setIsModalOpen(false)
+          handleSubmit({ preventDefault: () => {} } as any)
+        }}
+        isLoading={submitStatus === 'loading'}
+      />
     </div>
   )
 }

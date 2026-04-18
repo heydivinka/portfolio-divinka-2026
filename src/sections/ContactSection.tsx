@@ -13,6 +13,7 @@ interface ContactSectionProps {
   contactMessage: string
   setContactMessage: (val: string) => void
   submitStatus: 'idle' | 'loading' | 'success' | 'error'
+  setIsModalOpen: (val: boolean) => void
 }
 
 export function ContactSection({
@@ -23,7 +24,8 @@ export function ContactSection({
   setContactEmail,
   contactMessage,
   setContactMessage,
-  submitStatus
+  submitStatus,
+  setIsModalOpen
 }: ContactSectionProps) {
   return (
     <motion.section
@@ -63,7 +65,7 @@ export function ContactSection({
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:bg-green-400">
                 <FaWhatsapp />
               </div>
               <a href="https://wa.me/6289518051553" target="_blank" rel="noreferrer" className="group">

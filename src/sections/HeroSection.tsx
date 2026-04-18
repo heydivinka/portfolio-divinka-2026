@@ -73,8 +73,8 @@ export function HeroSection() {
           <div className="rounded-[22px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-zinc-700 dark:bg-zinc-800 hover:shadow-xl hover:shadow-zinc-400/50 transition-all duration-300 dark:hover:shadow-zinc-600/50">
             <div className="aspect-[4/5] overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 hover:brightness-110 transition-all duration-500">
               <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
-                alt="Profile"
+                src="/profile.png"
+                alt="Divinka Profile"
                 className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
