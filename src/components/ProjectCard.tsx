@@ -30,7 +30,7 @@ export function ProjectCard({ project, index, variants }: ProjectCardProps) {
       <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
         <span className="hover-underline">{project.title}</span>
       </h3>
-      <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">{project.description}</p>
+      <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">{project.description}</p>
       <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
         {project.tech.map((stack) => (
           <span

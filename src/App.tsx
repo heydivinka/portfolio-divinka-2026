@@ -173,32 +173,32 @@ export default function App() {
 
       <motion.main
         style={{ opacity: pageTextOpacity, filter: pageTextFilter }}
-        className="relative mx-auto max-w-6xl px-4 pb-20 pt-32 sm:px-6 sm:pt-40 lg:px-8 lg:pt-36"
+        className="relative mx-auto max-w-[1400px] px-4 pb-20 pt-32 sm:px-6 sm:pt-40 lg:px-8 lg:pt-36"
       >
         <motion.section
           ref={heroSectionRef}
-          className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-8 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-14"
+          className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10 lg:p-14"
           variants={container}
           initial="hidden"
           animate="show"
         >
-          <div className="mx-auto w-full max-w-4xl lg:flex lg:items-start lg:gap-12">
+          <div className="mx-auto w-full max-w-6xl lg:flex lg:items-start lg:gap-12">
             <div className="lg:flex-1">
               <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400 mb-6">
                 Portfolio
               </motion.p>
-              <h1 className="mt-4 max-w-xl text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 sm:mt-5 sm:text-5xl">
+              <h1 className="mt-8 max-w-xl text-3xl font-semibold leading-snug text-zinc-950 dark:text-zinc-50 sm:mt-10 sm:text-5xl">
                 <span className="typing-caret">{typedTitle}</span>
               </h1>
               <motion.div
                 ref={heroTextRef}
                 style={{ opacity: heroSubOpacity, filter: heroSubFilter }}
               >
-                <motion.p variants={item} className="mt-4 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
+                <motion.p variants={item} className="mt-8 max-w-2xl text-base text-zinc-600 dark:text-zinc-400 sm:text-lg leading-relaxed">
                   Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
                   responsive UI inspired by award-winning websites.
                 </motion.p>
-                <motion.div variants={item} className="flex flex-wrap gap-3">
+                <motion.div variants={item} className="mt-10 flex flex-wrap gap-4">
                   {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
                     <span
                       key={tag}
@@ -216,7 +216,7 @@ export default function App() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
               whileHover={{ scale: 1.05 }}
-              className="w-full max-w-[200px] sm:max-w-[220px] lg:max-w-[250px] lg:ml-auto shrink-0 mt-12 lg:mt-0"
+              className="w-full max-w-[200px] sm:max-w-[220px] lg:max-w-[250px] mx-auto lg:ml-auto shrink-0 mt-12 lg:mt-0"
               style={{ y: useTransform(scrollYProgress, [0, 1], [0, 150]) }}
             >
               <div className="rounded-[22px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-zinc-700 dark:bg-zinc-800 hover:shadow-xl hover:shadow-zinc-400/50 transition-all duration-300 dark:hover:shadow-zinc-600/50">
@@ -233,7 +233,7 @@ export default function App() {
         </motion.section>
 
         <motion.section
-          className="mt-12 sm:mt-16 rounded-3xl border border-zinc-200 bg-white/80 py-6 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70"
+          className="mt-12 sm:mt-16 rounded-3xl border border-zinc-200 bg-white/80 py-6 px-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70"
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -316,7 +316,7 @@ export default function App() {
             title="Projects"
             subtitle="Selected work that mixes aesthetics, UX, and engineering."
           />
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
               <ProjectCard key={project.title} project={project} index={index} variants={item} />
             ))}
@@ -360,7 +360,7 @@ export default function App() {
           viewport={{ once: true, amount: 0.25 }}
         >
           <SectionTitle title="Contact" subtitle="Let's collaborate on your next product." />
-          <motion.div variants={item} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div variants={item} className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <a className="contact-card" href="mailto:youremail@example.com">
               <FaEnvelope />
               <span className="hover-underline">youremail@example.com</span>

@@ -19,7 +19,7 @@ body {
     Helvetica,
     Arial,
     sans-serif;
-  @apply bg-zinc-100 dark:bg-zinc-950;
+  @apply bg-zinc-100 dark:bg-zinc-950 leading-relaxed;
   cursor: none; /* Hide default cursor */
 }
 
