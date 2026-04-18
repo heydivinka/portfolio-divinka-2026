@@ -180,7 +180,7 @@ export default function App() {
 
         setProjects(projectsData || [])
         setCertificates(certsData || [])
-        
+
         setDbStatus('connected')
       } catch (err) {
         console.error('Database connection error:', err)
@@ -486,7 +486,7 @@ export default function App() {
 
           {projects.length > visibleProjects && (
             <motion.div variants={itemVariants} className="mt-12 flex justify-center">
-              <button 
+              <button
                 onClick={() => setVisibleProjects(prev => prev + 3)}
                 className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:hover:border-zinc-600"
               >
@@ -550,7 +550,7 @@ export default function App() {
 
           {certificates.length > visibleCertificates && (
             <motion.div variants={itemVariants} className="mt-12 flex justify-center">
-              <button 
+              <button
                 onClick={() => setVisibleCertificates(prev => prev + 3)}
                 className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-white dark:hover:border-zinc-600"
               >
@@ -595,16 +595,16 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Email Me</p>
-                    <p className="text-lg font-bold text-zinc-900 dark:text-white">divinka@example.com</p>
+                    <p className="text-lg font-bold text-zinc-900 dark:text-white">19.divinka@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
                     <FaWhatsapp />
                   </div>
-                  <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" className="group">
+                  <a href="https://wa.me/6289518051553" target="_blank" rel="noreferrer" className="group">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">WhatsApp</p>
-                    <p className="text-lg font-bold text-zinc-900 dark:text-white group-hover:underline">+62 812 3456 7890</p>
+                    <p className="text-lg font-bold text-zinc-900 dark:text-white group-hover:underline">+62 895 1805 1553</p>
                   </a>
                 </div>
               </div>
@@ -674,8 +674,8 @@ export default function App() {
                       submitStatus === 'success'
                         ? 'bg-green-500 text-white shadow-green-200/50 dark:shadow-none'
                         : submitStatus === 'error'
-                        ? 'bg-red-500 text-white shadow-red-200/50 dark:shadow-none'
-                        : 'bg-zinc-900 text-white hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-zinc-200/50 dark:shadow-none'
+                          ? 'bg-red-500 text-white shadow-red-200/50 dark:shadow-none'
+                          : 'bg-zinc-900 text-white hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-zinc-200/50 dark:shadow-none'
                     )}
                   >
                     {submitStatus === 'loading' && (
@@ -684,10 +684,10 @@ export default function App() {
                     {submitStatus === 'success' && <FaCheckCircle />}
                     {submitStatus === 'error' && <FaExclamationTriangle />}
                     <span>
-                      {submitStatus === 'loading' ? 'Sending...' 
-                        : submitStatus === 'success' ? 'Message Sent!' 
-                        : submitStatus === 'error' ? 'Check your inputs & retry'
-                        : 'Send Message'}
+                      {submitStatus === 'loading' ? 'Sending...'
+                        : submitStatus === 'success' ? 'Message Sent!'
+                          : submitStatus === 'error' ? 'Check your inputs & retry'
+                            : 'Send Message'}
                     </span>
                     {submitStatus === 'idle' && <FaArrowRight className="transition-transform group-hover:translate-x-1" />}
                   </motion.button>
