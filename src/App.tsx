@@ -15,6 +15,8 @@ import {
   FaCss3Alt,
   FaGitAlt,
   FaFigma,
+  FaWhatsapp,
+  FaArrowRight,
 } from 'react-icons/fa'
 import { SiTypescript, SiTailwindcss, SiFramer, SiMongodb } from 'react-icons/si'
 
@@ -148,9 +150,9 @@ const item = {
     filter: 'blur(0px)',
     transition: { 
       type: 'spring',
-      damping: 25,
-      stiffness: 100,
-      duration: 0.8
+      damping: 18,
+      stiffness: 90,
+      duration: 0.6
     } 
   },
 }
@@ -440,66 +442,96 @@ export default function App() {
 
         <motion.section
           id="contact"
-          className="mt-24 sm:mt-32 rounded-3xl border border-zinc-200 bg-zinc-100/70 p-8 sm:p-14 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70"
+          className="relative mt-24 sm:mt-32 overflow-hidden rounded-[3rem] border border-zinc-200 bg-white/50 p-8 sm:p-20 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/50"
           variants={container}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.25 }}
+          viewport={{ once: true, amount: 0.2 }}
         >
-          <SectionTitle title="Contact" subtitle="Let's collaborate on your next product." />
-          <motion.div variants={item} className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <motion.a 
-              variants={item}
-              whileHover={{ y: -5, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="contact-card" 
-              href="mailto:youremail@example.com"
-            >
-              <FaEnvelope />
-              <span className="hover-underline">youremail@example.com</span>
-            </motion.a>
-            <motion.a 
-              variants={item}
-              whileHover={{ y: -5, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="contact-card" 
-              href="https://github.com" 
-              target="_blank" 
-              rel="noreferrer"
-            >
-              <FaGithub />
-              <span className="hover-underline">GitHub</span>
-            </motion.a>
-            <motion.a 
-              variants={item}
-              whileHover={{ y: -5, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="contact-card" 
-              href="https://linkedin.com" 
-              target="_blank" 
-              rel="noreferrer"
-            >
-              <FaLinkedin />
-              <span className="hover-underline">LinkedIn</span>
-            </motion.a>
-            <motion.a 
-              variants={item}
-              whileHover={{ y: -5, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="contact-card" 
-              href="https://youtube.com" 
-              target="_blank" 
-              rel="noreferrer"
-            >
-              <FaYoutube />
-              <span className="hover-underline">YouTube</span>
-            </motion.a>
-          </motion.div>
+          {/* Background Decorative Lines */}
+          <div className="absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
+             <div className="absolute left-1/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
+             <div className="absolute left-2/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
+             <div className="absolute left-3/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
+          </div>
+
+          <div className="grid gap-16 lg:grid-cols-2">
+            <motion.div variants={item}>
+              <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-zinc-900 dark:text-white leading-[0.95]">
+                Let's build <br />
+                something <br />
+                <span className="text-zinc-400 dark:text-zinc-600">extraordinary.</span>
+              </h2>
+              <p className="mt-8 max-w-md text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+                Whether you have a specific project in mind or just want to say hi, 
+                I'm always open to discussing new opportunities and creative ideas.
+              </p>
+              
+              <div className="mt-12 flex flex-col gap-6">
+                 <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white">
+                       <FaEnvelope />
+                    </div>
+                    <div>
+                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Email Me</p>
+                       <p className="text-lg font-bold text-zinc-900 dark:text-white">divinka@example.com</p>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+                       <FaWhatsapp />
+                    </div>
+                    <div>
+                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">WhatsApp</p>
+                       <p className="text-lg font-bold text-zinc-900 dark:text-white">+62 812 3456 7890</p>
+                    </div>
+                 </div>
+              </div>
+            </motion.div>
+
+            <motion.div variants={item} className="flex flex-col justify-between gap-12">
+               <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Connect with me</h3>
+                  <div className="flex flex-wrap gap-4">
+                     {[
+                       { name: 'GitHub', icon: FaGithub, color: 'hover:text-zinc-900 dark:hover:text-white', url: '#' },
+                       { name: 'LinkedIn', icon: FaLinkedin, color: 'hover:text-[#0077b5]', url: '#' },
+                       { name: 'YouTube', icon: FaYoutube, color: 'hover:text-[#ff0000]', url: '#' },
+                     ].map((social) => (
+                       <motion.a
+                         key={social.name}
+                         href={social.url}
+                         target="_blank"
+                         rel="noreferrer"
+                         whileHover={{ y: -5, scale: 1.1 }}
+                         whileTap={{ scale: 0.95 }}
+                         className={clsx(
+                           "flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-2xl text-zinc-400 shadow-sm transition-all dark:border-zinc-800 dark:bg-zinc-950",
+                           social.color
+                         )}
+                       >
+                         <social.icon />
+                       </motion.a>
+                     ))}
+                  </div>
+               </div>
+
+               <motion.a 
+                 href="mailto:divinka@example.com"
+                 whileHover={{ scale: 1.02 }}
+                 whileTap={{ scale: 0.98 }}
+                 className="group relative flex items-center justify-center gap-3 overflow-hidden rounded-2xl bg-zinc-900 px-8 py-5 text-lg font-bold text-white transition-all hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-2xl shadow-zinc-200/50 dark:shadow-none"
+               >
+                 <span>Start a Conversation</span>
+                 <FaArrowRight className="transition-transform group-hover:translate-x-1" />
+               </motion.a>
+            </motion.div>
+          </div>
         </motion.section>
       </motion.main>
 
-      <footer className="relative mt-20 border-t border-zinc-200 py-8 text-center text-sm font-medium text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-        <p>© {new Date().getFullYear()} Your Name. Crafted with React, TypeScript, Node.js, Tailwind, and Framer Motion.</p>
+      <footer className="relative mt-20 border-t border-zinc-200 py-12 text-center text-sm font-medium text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+        <p>© {new Date().getFullYear()} Divinka. Crafted with React, TypeScript, Tailwind, and Framer Motion.</p>
       </footer>
     </div>
   )

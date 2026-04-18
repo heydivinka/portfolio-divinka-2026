@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { clsx } from 'clsx'
+import { FaBars, FaTimes } from 'react-icons/fa'
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState('')
   const [isVisible, setIsVisible] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   const scrollTo = (id: string) => {
@@ -13,6 +15,7 @@ export function Navbar() {
       const y = el.getBoundingClientRect().top + window.scrollY - 120
       window.scrollTo({ top: y, behavior: 'smooth' })
     }
+    setIsOpen(false)
   }
 
   const links = React.useMemo(() => [
@@ -69,11 +72,24 @@ export function Navbar() {
           setActiveSection(entry.target.id)
         }
       })
+
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100
+      if (isAtBottom) {
+        setActiveSection('contact')
+      }
     }
 
     const observer = new IntersectionObserver(callback, options)
 
-    // Delay observation slightly to ensure DOM is ready
+    const handleBottomScroll = () => {
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100
+      if (isAtBottom) {
+        setActiveSection('contact')
+      }
+    }
+
+    window.addEventListener('scroll', handleBottomScroll)
+
     const timer = setTimeout(() => {
       links.forEach((link) => {
         const el = document.getElementById(link.id)
@@ -85,6 +101,7 @@ export function Navbar() {
 
     return () => {
       clearTimeout(timer)
+      window.removeEventListener('scroll', handleBottomScroll)
       links.forEach((link) => {
         const el = document.getElementById(link.id)
         if (el) {
@@ -111,45 +128,101 @@ export function Navbar() {
 
   return (
     <>
-      {/* Trigger Zone: Invisible area at the top to catch hover */}
       <div 
         onMouseEnter={handleMouseEnter}
         className="fixed left-0 top-0 z-[60] h-12 w-full"
       />
 
-      <AnimatePresence>
-        {isVisible && (
-          <motion.nav 
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            initial={{ y: -100, opacity: 0, x: '-50%' }}
-            animate={{ y: 0, opacity: 1, x: '-50%' }}
-            exit={{ y: -100, opacity: 0, x: '-50%' }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed left-1/2 top-6 z-[70] flex w-max max-w-[95vw] items-center justify-center gap-1 rounded-full border border-zinc-200/40 bg-white/70 p-1.5 text-[11px] font-bold text-zinc-800 shadow-xl shadow-zinc-200/20 backdrop-blur-xl dark:border-zinc-700/40 dark:bg-zinc-900/70 dark:text-zinc-100 dark:shadow-black/30 sm:gap-2 sm:text-sm"
-          >
-            {links.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollTo(link.id)}
-                className={clsx(
-                  'relative px-4 py-2 transition-colors duration-300',
-                  activeSection === link.id ? 'text-zinc-950 dark:text-white' : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                )}
-              >
-                {activeSection === link.id && (
+      <div className="fixed inset-x-0 top-6 z-[70] flex justify-center px-4 pointer-events-none">
+        <AnimatePresence mode="wait">
+          {isVisible && (
+            <motion.nav 
+              layout
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              initial={{ y: -100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -100, opacity: 0 }}
+              transition={{ 
+                type: 'spring',
+                damping: 20,
+                stiffness: 100
+              }}
+              className={clsx(
+                "pointer-events-auto flex flex-col items-center justify-center rounded-[32px] border border-zinc-200/40 bg-white/75 shadow-xl shadow-zinc-200/20 backdrop-blur-xl dark:border-zinc-700/40 dark:bg-zinc-900/75 dark:shadow-black/30 transition-colors duration-500",
+                isOpen ? "w-full max-w-[400px] p-4" : "w-max p-1.5"
+              )}
+            >
+              <div className="flex w-full items-center justify-between gap-2">
+                <button 
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex items-center gap-2 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white sm:hidden transition-colors"
+                >
                   <motion.div
-                    layoutId="active-pill"
-                    className="absolute inset-0 z-[-1] rounded-full bg-zinc-200/50 dark:bg-zinc-800/50"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                  />
+                    animate={{ rotate: isOpen ? 90 : 0 }}
+                    transition={{ type: 'spring', damping: 20 }}
+                  >
+                    {isOpen ? <FaTimes /> : <FaBars />}
+                  </motion.div>
+                  <span>{isOpen ? 'Close' : activeSection || 'Menu'}</span>
+                </button>
+
+                <div className="hidden sm:flex items-center gap-1">
+                  <LayoutGroup id="nav-desktop">
+                    {links.map((link) => (
+                      <button
+                        key={link.id}
+                        onClick={() => scrollTo(link.id)}
+                        className={clsx(
+                          'relative px-4 py-2 text-center transition-colors duration-300 outline-none',
+                          activeSection === link.id ? 'text-zinc-950 dark:text-white' : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
+                        )}
+                      >
+                        {activeSection === link.id && (
+                          <motion.div
+                            layoutId="active-pill"
+                            className="absolute inset-0 z-[-1] rounded-full bg-zinc-200/60 dark:bg-zinc-800/60"
+                            transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
+                          />
+                        )}
+                        <span className="text-sm font-bold">{link.name}</span>
+                      </button>
+                    ))}
+                  </LayoutGroup>
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 150 }}
+                    className="flex flex-col w-full mt-4 gap-1 sm:hidden overflow-hidden"
+                  >
+                    {links.map((link, idx) => (
+                      <motion.button
+                        key={link.id}
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: idx * 0.05 }}
+                        onClick={() => scrollTo(link.id)}
+                        className={clsx(
+                          'relative w-full rounded-2xl px-4 py-3 text-left transition-colors duration-300 outline-none',
+                          activeSection === link.id ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-950 dark:text-white' : 'text-zinc-500 dark:text-zinc-400'
+                        )}
+                      >
+                        <span className="text-sm font-bold">{link.name}</span>
+                      </motion.button>
+                    ))}
+                  </motion.div>
                 )}
-                <span>{link.name}</span>
-              </button>
-            ))}
-          </motion.nav>
-        )}
-      </AnimatePresence>
+              </AnimatePresence>
+            </motion.nav>
+          )}
+        </AnimatePresence>
+      </div>
     </>
   )
 }
