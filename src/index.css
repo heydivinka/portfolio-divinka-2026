@@ -19,7 +19,7 @@ body {
     Helvetica,
     Arial,
     sans-serif;
-  background: #f4f4f5;
+  @apply bg-zinc-100 dark:bg-zinc-950;
 }
 
 .typing-caret::after {
