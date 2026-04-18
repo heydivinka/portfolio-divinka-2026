@@ -20,6 +20,8 @@ import {
   FaArrowRight,
   FaUser,
   FaCommentDots,
+  FaCheckCircle,
+  FaExclamationTriangle,
 } from 'react-icons/fa'
 import { SiTypescript, SiTailwindcss, SiFramer, SiMongodb } from 'react-icons/si'
 
@@ -152,7 +154,9 @@ export default function App() {
   const [isDark, setIsDark] = useState(false)
   const [typedTitle, setTypedTitle] = useState('')
   const [contactName, setContactName] = useState('')
+  const [contactEmail, setContactEmail] = useState('')
   const [contactMessage, setContactMessage] = useState('')
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [projects, setProjects] = useState<Project[]>([])
   const [certificates, setCertificates] = useState<Certificate[]>([])
   const [visibleProjects, setVisibleProjects] = useState(3)
@@ -186,6 +190,32 @@ export default function App() {
 
     fetchData()
   }, [])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+    if (!contactName.trim() || !emailRegex.test(contactEmail) || contactMessage.trim().length < 5) {
+      setSubmitStatus('error')
+      setTimeout(() => setSubmitStatus('idle'), 3000)
+      return
+    }
+    setSubmitStatus('loading')
+    const { error } = await supabase.from('messages').insert({
+      name: contactName.trim(),
+      email: contactEmail.trim(),
+      message: contactMessage.trim(),
+    })
+    if (error) {
+      console.error('Submit error:', error)
+      setSubmitStatus('error')
+    } else {
+      setSubmitStatus('success')
+      setContactName('')
+      setContactEmail('')
+      setContactMessage('')
+    }
+    setTimeout(() => setSubmitStatus('idle'), 4000)
+  }
   const heroSectionRef = useRef<HTMLElement | null>(null)
   const heroTextRef = useRef<HTMLDivElement | null>(null)
   const heroTitle = "Hi, I'm Divinka. I build modern and animated web experiences."
@@ -609,13 +639,20 @@ export default function App() {
 
               <div className="space-y-6 pt-12 border-t border-zinc-100 dark:border-zinc-800">
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Send a quick message</h3>
-                <div className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                   <ContactInput
                     label="Name"
                     placeholder="Enter your name"
                     icon={<FaUser />}
                     value={contactName}
                     onChange={setContactName}
+                  />
+                  <ContactInput
+                    label="Email"
+                    placeholder="your@email.com"
+                    icon={<FaEnvelope />}
+                    value={contactEmail}
+                    onChange={setContactEmail}
                   />
                   <ContactInput
                     label="Message"
@@ -626,18 +663,36 @@ export default function App() {
                     value={contactMessage}
                     onChange={setContactMessage}
                   />
-                </div>
-              </div>
 
-              <motion.a
-                href={`mailto:divinka@example.com?subject=Message from ${contactName}&body=${contactMessage}`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="group relative flex items-center justify-center gap-3 overflow-hidden rounded-2xl bg-zinc-900 px-8 py-5 text-lg font-bold text-white transition-all hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-2xl shadow-zinc-200/50 dark:shadow-none"
-              >
-                <span>Start a Conversation</span>
-                <FaArrowRight className="transition-transform group-hover:translate-x-1" />
-              </motion.a>
+                  <motion.button
+                    type="submit"
+                    disabled={submitStatus === 'loading' || submitStatus === 'success'}
+                    whileHover={{ scale: submitStatus === 'idle' ? 1.02 : 1 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={clsx(
+                      "group relative mt-4 w-full flex items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 py-5 text-lg font-bold transition-all shadow-2xl",
+                      submitStatus === 'success'
+                        ? 'bg-green-500 text-white shadow-green-200/50 dark:shadow-none'
+                        : submitStatus === 'error'
+                        ? 'bg-red-500 text-white shadow-red-200/50 dark:shadow-none'
+                        : 'bg-zinc-900 text-white hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-zinc-200/50 dark:shadow-none'
+                    )}
+                  >
+                    {submitStatus === 'loading' && (
+                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    )}
+                    {submitStatus === 'success' && <FaCheckCircle />}
+                    {submitStatus === 'error' && <FaExclamationTriangle />}
+                    <span>
+                      {submitStatus === 'loading' ? 'Sending...' 
+                        : submitStatus === 'success' ? 'Message Sent!' 
+                        : submitStatus === 'error' ? 'Check your inputs & retry'
+                        : 'Send Message'}
+                    </span>
+                    {submitStatus === 'idle' && <FaArrowRight className="transition-transform group-hover:translate-x-1" />}
+                  </motion.button>
+                </form>
+              </div>
             </motion.div>
           </div>
         </motion.section>
