@@ -1,4 +1,5 @@
 import { motion, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
+import type { Variants } from 'framer-motion'
 import { clsx } from 'clsx'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -130,23 +131,28 @@ const techMarquee = [
   { name: 'Figma', icon: FaFigma, color: 'text-[#A259FF]' },
 ]
 
-const container = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
     },
   },
 }
 
-const item = {
-  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
+const itemVariants: Variants = {
+  hidden: { 
+    opacity: 0, 
+    y: 40, 
+    scale: 0.95,
+    filter: 'blur(8px)' 
+  },
   show: { 
     opacity: 1, 
     y: 0, 
-    scale: 1, 
+    scale: 1,
     filter: 'blur(0px)',
     transition: { 
       type: 'spring',
@@ -235,13 +241,13 @@ export default function App() {
         <motion.section
           ref={heroSectionRef}
           className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10 lg:p-14"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           animate="show"
         >
           <div className="mx-auto w-full max-w-6xl lg:flex lg:items-start lg:gap-12">
             <div className="lg:flex-1">
-              <motion.p variants={item} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400 mb-6">
+              <motion.p variants={itemVariants} className="text-xs uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400 mb-6">
                 Portfolio
               </motion.p>
               <h1 className="mt-8 max-w-xl text-3xl font-semibold leading-snug text-zinc-950 dark:text-zinc-50 sm:mt-10 sm:text-5xl">
@@ -251,11 +257,11 @@ export default function App() {
                 ref={heroTextRef}
                 style={{ opacity: heroSubOpacity, filter: heroSubFilter }}
               >
-                <motion.p variants={item} className="mt-8 max-w-2xl text-base text-zinc-600 dark:text-zinc-400 sm:text-lg leading-relaxed">
+                <motion.p variants={itemVariants} className="mt-8 max-w-2xl text-base text-zinc-600 dark:text-zinc-400 sm:text-lg leading-relaxed">
                   Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
                   responsive UI inspired by award-winning websites.
                 </motion.p>
-                <motion.div variants={item} className="mt-10 flex flex-wrap gap-4">
+                <motion.div variants={itemVariants} className="mt-10 flex flex-wrap gap-4">
                   {['TypeScript', 'React', 'Node.js', 'Framer Motion', 'Tailwind CSS'].map((tag) => (
                     <span
                       key={tag}
@@ -268,7 +274,7 @@ export default function App() {
               </motion.div>
             </div>
             <motion.div
-              variants={item}
+              variants={itemVariants}
               initial={{ opacity: 0, x: 30, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
@@ -291,12 +297,12 @@ export default function App() {
 
         <motion.section
           className="mt-12 sm:mt-16 py-8"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.5 }}
         >
-          <motion.div variants={item} className="logo-marquee-viewport">
+          <motion.div variants={itemVariants} className="logo-marquee-viewport">
             <div className="logo-marquee-track">
               {[techMarquee, techMarquee].map((group, groupIndex) => (
                 <div key={`group-${groupIndex}`} className="logo-marquee-group" aria-hidden={groupIndex === 1}>
@@ -318,15 +324,15 @@ export default function App() {
         <motion.section
           id="education"
           className="mt-24 sm:mt-32"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
-          <SectionTitle title="Education" subtitle="My academic journey and specialized training." />
+          <SectionTitle title="Education" subtitle="My academic journey and specialized training." variants={itemVariants} />
           <div className="mx-auto max-w-4xl">
             {education.map((item, idx) => (
-              <TimelineItem key={idx} {...item} variants={item} />
+              <TimelineItem key={idx} {...item} variants={itemVariants} />
             ))}
           </div>
         </motion.section>
@@ -334,15 +340,15 @@ export default function App() {
         <motion.section
           id="experience"
           className="mt-24 sm:mt-32"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
-          <SectionTitle title="Experience" subtitle="Professional projects and collaborations." />
+          <SectionTitle title="Experience" subtitle="Professional projects and collaborations." variants={itemVariants} />
           <div className="mx-auto max-w-4xl">
             {experience.map((item, idx) => (
-              <TimelineItem key={idx} {...item} variants={item} />
+              <TimelineItem key={idx} {...item} variants={itemVariants} />
             ))}
           </div>
         </motion.section>
@@ -350,15 +356,15 @@ export default function App() {
         <motion.section
           id="skills"
           className="mt-24 sm:mt-32"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
-          <SectionTitle title="Skills & Languages" subtitle="Core technologies I use daily." />
+          <SectionTitle title="Skills & Languages" subtitle="Core technologies I use daily." variants={itemVariants} />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {skillCategories.map((skill) => (
-              <SkillCard key={skill.title} skill={skill} variants={item} />
+              <SkillCard key={skill.title} skill={skill} variants={itemVariants} />
             ))}
           </div>
         </motion.section>
@@ -366,7 +372,7 @@ export default function App() {
         <motion.section
           id="video"
           className="mt-24 sm:mt-32"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
@@ -374,9 +380,10 @@ export default function App() {
           <SectionTitle
             title="Featured YouTube Video"
             subtitle="Embed your intro, walkthrough, or project demo here."
+            variants={itemVariants}
           />
           <motion.div
-            variants={item}
+            variants={itemVariants}
             className="overflow-hidden rounded-3xl border border-zinc-200 bg-black shadow-2xl dark:border-zinc-800"
           >
             <div className="aspect-video w-full">
@@ -396,7 +403,7 @@ export default function App() {
         <motion.section
           id="projects"
           className="mt-24 sm:mt-32"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
@@ -404,10 +411,16 @@ export default function App() {
           <SectionTitle
             title="Projects"
             subtitle="Selected work that mixes aesthetics, UX, and engineering."
+            variants={itemVariants}
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} variants={item} />
+              <ProjectCard 
+                key={project.title} 
+                project={project} 
+                index={index} 
+                variants={itemVariants} 
+              />
             ))}
           </div>
         </motion.section>
@@ -415,7 +428,7 @@ export default function App() {
         <motion.section
           id="certificates"
           className="mt-24 sm:mt-32"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
@@ -423,12 +436,13 @@ export default function App() {
           <SectionTitle
             title="Certificates"
             subtitle="Learning milestones that support quality delivery."
+            variants={itemVariants}
           />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {certificates.map((cert) => (
               <motion.article
                 key={cert}
-                variants={item}
+                variants={itemVariants}
                 className="rounded-2xl border border-zinc-200 bg-white/75 p-5 sm:p-6 text-base font-medium text-zinc-700 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300"
               >
                 <p className="flex items-start gap-3">
@@ -443,7 +457,7 @@ export default function App() {
         <motion.section
           id="contact"
           className="relative mt-24 sm:mt-32 overflow-hidden rounded-[3rem] border border-zinc-200 bg-white/50 p-8 sm:p-20 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/50"
-          variants={container}
+          variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
@@ -456,7 +470,7 @@ export default function App() {
           </div>
 
           <div className="grid gap-16 lg:grid-cols-2">
-            <motion.div variants={item}>
+            <motion.div variants={itemVariants}>
               <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-zinc-900 dark:text-white leading-[0.95]">
                 Let's build <br />
                 something <br />
@@ -481,15 +495,15 @@ export default function App() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
                        <FaWhatsapp />
                     </div>
-                    <div>
+                    <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" className="group">
                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">WhatsApp</p>
-                       <p className="text-lg font-bold text-zinc-900 dark:text-white">+62 812 3456 7890</p>
-                    </div>
+                       <p className="text-lg font-bold text-zinc-900 dark:text-white group-hover:underline">+62 812 3456 7890</p>
+                    </a>
                  </div>
               </div>
             </motion.div>
 
-            <motion.div variants={item} className="flex flex-col justify-between gap-12">
+            <motion.div variants={itemVariants} className="flex flex-col justify-between gap-12">
                <div className="space-y-6">
                   <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Connect with me</h3>
                   <div className="flex flex-wrap gap-4">
