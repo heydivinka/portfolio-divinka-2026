@@ -17,6 +17,7 @@ import { ProjectsSection } from './sections/ProjectsSection'
 import { CertificatesSection } from './sections/CertificatesSection'
 import { ContactSection } from './sections/ContactSection'
 import { ConfirmationModal } from './components/ConfirmationModal'
+import { StatusModal } from './components/StatusModal'
 
 // Lib
 import { supabase } from './lib/supabase'
@@ -34,6 +35,17 @@ export default function App() {
   const [visibleCertificates, setVisibleCertificates] = useState(3)
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [statusModalConfig, setStatusModalConfig] = useState<{
+    isOpen: boolean
+    type: 'success' | 'error'
+    title: string
+    message: string
+  }>({
+    isOpen: false,
+    type: 'success',
+    title: '',
+    message: '',
+  })
 
   const { scrollYProgress: pageScrollYProgress } = useScroll()
   const pageTextOpacity = useTransform(pageScrollYProgress, [0, 0.65, 1], [1, 0.9, 0.82])
@@ -83,11 +95,23 @@ export default function App() {
     if (error) {
       console.error('Submit error:', error)
       setSubmitStatus('error')
+      setStatusModalConfig({
+        isOpen: true,
+        type: 'error',
+        title: 'System Error',
+        message: 'Something went wrong while sending your message. Please try again later or contact me via WhatsApp.'
+      })
     } else {
       setSubmitStatus('success')
       setContactName('')
       setContactEmail('')
       setContactMessage('')
+      setStatusModalConfig({
+        isOpen: true,
+        type: 'success',
+        title: 'Message Received!',
+        message: "Your message has been safely delivered to my inbox. I'll get back to you as soon as possible."
+      })
     }
     setTimeout(() => setSubmitStatus('idle'), 4000)
   }
@@ -157,6 +181,12 @@ export default function App() {
             const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
             if (!contactName.trim() || !emailRegex.test(contactEmail) || contactMessage.trim().length < 5) {
               setSubmitStatus('error')
+              setStatusModalConfig({
+                isOpen: true,
+                type: 'error',
+                title: 'Check your inputs',
+                message: 'Please make sure all fields are filled correctly and the message is at least 5 characters long.'
+              })
               setTimeout(() => setSubmitStatus('idle'), 3000)
               return
             }
@@ -169,7 +199,6 @@ export default function App() {
           contactMessage={contactMessage}
           setContactMessage={setContactMessage}
           submitStatus={submitStatus}
-          setIsModalOpen={setIsModalOpen}
         />
       </motion.main>
 
@@ -185,6 +214,14 @@ export default function App() {
           handleSubmit({ preventDefault: () => {} } as any)
         }}
         isLoading={submitStatus === 'loading'}
+      />
+
+      <StatusModal
+        isOpen={statusModalConfig.isOpen}
+        onClose={() => setStatusModalConfig(prev => ({ ...prev, isOpen: false }))}
+        type={statusModalConfig.type}
+        title={statusModalConfig.title}
+        message={statusModalConfig.message}
       />
     </div>
   )

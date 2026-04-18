@@ -13,7 +13,6 @@ interface ContactSectionProps {
   contactMessage: string
   setContactMessage: (val: string) => void
   submitStatus: 'idle' | 'loading' | 'success' | 'error'
-  setIsModalOpen: (val: boolean) => void
 }
 
 export function ContactSection({
@@ -24,8 +23,7 @@ export function ContactSection({
   setContactEmail,
   contactMessage,
   setContactMessage,
-  submitStatus,
-  setIsModalOpen
+  submitStatus
 }: ContactSectionProps) {
   return (
     <motion.section
