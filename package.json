@@ -19,6 +19,7 @@
     "vite": "^8.0.4"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "react": "^19.2.5",

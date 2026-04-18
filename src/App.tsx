@@ -18,6 +18,8 @@ import {
   FaFigma,
   FaWhatsapp,
   FaArrowRight,
+  FaUser,
+  FaCommentDots,
 } from 'react-icons/fa'
 import { SiTypescript, SiTailwindcss, SiFramer, SiMongodb } from 'react-icons/si'
 
@@ -28,6 +30,8 @@ import { CustomCursor } from './components/CustomCursor'
 import { ProjectCard } from './components/ProjectCard'
 import { SkillCard } from './components/SkillCard'
 import { TimelineItem } from './components/TimelineItem'
+import { ContactInput } from './components/ContactInput'
+import { supabase } from './lib/supabase'
 
 type SkillCategory = {
   title: string
@@ -39,6 +43,13 @@ type Project = {
   description: string
   tech: string[]
   url: string
+  image?: string
+}
+
+type Certificate = {
+  title: string
+  url: string
+  logo?: string
 }
 
 type TimelineEntry = {
@@ -80,7 +91,7 @@ const experience: TimelineEntry[] = [
     date: 'Jan - Apr 2025',
     title: 'Cohort Coding Camp 2025',
     subtitle: 'Coding Camp powered by DBS Foundation',
-    description: 'Berkolaborasi dengan tim Capstone untuk menyelesaikan masalah pada situs Agrikultur digital di Indonesia.',
+    description: 'Berkolaborasi dengan tim Capstone untuk menyelesaikan masalah pada Financial technology yang ada di Indonesia.',
     iconType: 'work',
   },
 ]
@@ -91,31 +102,46 @@ const skillCategories: SkillCategory[] = [
   { title: 'Tooling', items: ['Git', 'Vite', 'Figma', 'Postman'] },
 ]
 
-const projects: Project[] = [
+const DEFAULT_PROJECTS: Project[] = [
   {
     title: 'Animated Landing Page',
     description: 'High-converting product page with smooth section transitions and mobile-first UX.',
     tech: ['React', 'TypeScript', 'Framer Motion'],
     url: '#',
+    image: 'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1200&q=80',
   },
   {
     title: 'Portfolio CMS',
     description: 'Portfolio manager with CRUD dashboard and role-based access for managing projects.',
     tech: ['Node.js', 'Express', 'MongoDB'],
     url: '#',
+    image: 'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?auto=format&fit=crop&w=1200&q=80',
   },
   {
     title: 'UI Component Library',
     description: 'Reusable design system components inspired by award-winning product websites.',
     tech: ['React', 'Tailwind CSS', 'Storybook'],
     url: '#',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
   },
 ]
 
-const certificates = [
-  'Meta Front-End Developer Certificate',
-  'JavaScript Algorithms and Data Structures',
-  'Responsive Web Design Certification',
+const DEFAULT_CERTIFICATES: Certificate[] = [
+  {
+    title: 'Meta Front-End Developer Certificate',
+    url: '#',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg',
+  },
+  {
+    title: 'JavaScript Algorithms and Data Structures',
+    url: '#',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg',
+  },
+  {
+    title: 'Responsive Web Design Certification',
+    url: '#',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg',
+  },
 ]
 
 const techMarquee = [
@@ -143,29 +169,64 @@ const containerVariants: Variants = {
 }
 
 const itemVariants: Variants = {
-  hidden: { 
-    opacity: 0, 
-    y: 40, 
+  hidden: {
+    opacity: 0,
+    y: 40,
     scale: 0.95,
-    filter: 'blur(8px)' 
+    filter: 'blur(8px)'
   },
-  show: { 
-    opacity: 1, 
-    y: 0, 
+  show: {
+    opacity: 1,
+    y: 0,
     scale: 1,
     filter: 'blur(0px)',
-    transition: { 
+    transition: {
       type: 'spring',
       damping: 18,
       stiffness: 90,
       duration: 0.6
-    } 
+    }
   },
 }
 
 export default function App() {
   const [isDark, setIsDark] = useState(false)
   const [typedTitle, setTypedTitle] = useState('')
+  const [contactName, setContactName] = useState('')
+  const [contactMessage, setContactMessage] = useState('')
+  const [projects, setProjects] = useState<Project[]>(DEFAULT_PROJECTS)
+  const [certificates, setCertificates] = useState<Certificate[]>(DEFAULT_CERTIFICATES)
+  const [visibleProjects, setVisibleProjects] = useState(3)
+  const [visibleCertificates, setVisibleCertificates] = useState(3)
+  const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data: projectsData, error: projectsError } = await supabase
+          .from('projects')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        const { data: certsData, error: certsError } = await supabase
+          .from('certificates')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (projectsError || certsError) throw projectsError || certsError
+
+        if (projectsData && projectsData.length > 0) setProjects(projectsData)
+        if (certsData && certsData.length > 0) setCertificates(certsData)
+        
+        setDbStatus('connected')
+      } catch (err) {
+        console.error('Database connection error:', err)
+        setDbStatus('error')
+      }
+    }
+
+    fetchData()
+  }, [])
   const heroSectionRef = useRef<HTMLElement | null>(null)
   const heroTextRef = useRef<HTMLDivElement | null>(null)
   const heroTitle = "Hi, I'm Divinka. I build modern and animated web experiences."
@@ -220,7 +281,7 @@ export default function App() {
     <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors dark:bg-zinc-950 dark:text-zinc-100">
       <Navbar />
       <CustomCursor />
-      
+
       <div className="soft-cursor-light pointer-events-none fixed inset-0 dark:hidden" />
       <div className="soft-cursor-dark pointer-events-none fixed inset-0 hidden dark:block" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(0,0,0,.08),transparent_50%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,.08),transparent_55%)]" />
@@ -414,15 +475,27 @@ export default function App() {
             variants={itemVariants}
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <ProjectCard 
-                key={project.title} 
-                project={project} 
-                index={index} 
-                variants={itemVariants} 
+            {projects.slice(0, visibleProjects).map((project, index) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+                variants={itemVariants}
               />
             ))}
           </div>
+
+          {projects.length > visibleProjects && (
+            <motion.div variants={itemVariants} className="mt-12 flex justify-center">
+              <button 
+                onClick={() => setVisibleProjects(prev => prev + 3)}
+                className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:hover:border-zinc-600"
+              >
+                View More Projects
+                <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" />
+              </button>
+            </motion.div>
+          )}
         </motion.section>
 
         <motion.section
@@ -439,19 +512,42 @@ export default function App() {
             variants={itemVariants}
           />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {certificates.map((cert) => (
-              <motion.article
-                key={cert}
+            {certificates.slice(0, visibleCertificates).map((cert) => (
+              <motion.a
+                key={cert.title}
+                href={cert.url}
+                target="_blank"
+                rel="noreferrer"
                 variants={itemVariants}
-                className="rounded-2xl border border-zinc-200 bg-white/75 p-5 sm:p-6 text-base font-medium text-zinc-700 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300"
+                whileHover={{ scale: 1.02, y: -4 }}
+                className="group flex flex-col items-center gap-4 rounded-2xl border border-zinc-200 bg-white/75 p-6 text-center backdrop-blur transition-all hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/70"
               >
-                <p className="flex items-start gap-3">
-                  <FaCertificate className="mt-1 text-lg text-zinc-500 dark:text-zinc-400" />
-                  {cert}
+                {cert.logo && (
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-2 shadow-sm dark:bg-zinc-800">
+                    <img src={cert.logo} alt={cert.title} className="h-full w-full object-contain" />
+                  </div>
+                )}
+                <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
+                  {cert.title}
                 </p>
-              </motion.article>
+                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300 transition-colors">
+                  View Certificate
+                </span>
+              </motion.a>
             ))}
           </div>
+
+          {certificates.length > visibleCertificates && (
+            <motion.div variants={itemVariants} className="mt-12 flex justify-center">
+              <button 
+                onClick={() => setVisibleCertificates(prev => prev + 3)}
+                className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-white dark:hover:border-zinc-600"
+              >
+                View More Certificates
+                <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" />
+              </button>
+            </motion.div>
+          )}
         </motion.section>
 
         <motion.section
@@ -464,9 +560,9 @@ export default function App() {
         >
           {/* Background Decorative Lines */}
           <div className="absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
-             <div className="absolute left-1/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
-             <div className="absolute left-2/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
-             <div className="absolute left-3/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
+            <div className="absolute left-1/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
+            <div className="absolute left-2/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
+            <div className="absolute left-3/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
           </div>
 
           <div className="grid gap-16 lg:grid-cols-2">
@@ -477,68 +573,90 @@ export default function App() {
                 <span className="text-zinc-400 dark:text-zinc-600">extraordinary.</span>
               </h2>
               <p className="mt-8 max-w-md text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-                Whether you have a specific project in mind or just want to say hi, 
+                Whether you have a specific project in mind or just want to say hi,
                 I'm always open to discussing new opportunities and creative ideas.
               </p>
-              
+
               <div className="mt-12 flex flex-col gap-6">
-                 <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white">
-                       <FaEnvelope />
-                    </div>
-                    <div>
-                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Email Me</p>
-                       <p className="text-lg font-bold text-zinc-900 dark:text-white">divinka@example.com</p>
-                    </div>
-                 </div>
-                 <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
-                       <FaWhatsapp />
-                    </div>
-                    <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" className="group">
-                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">WhatsApp</p>
-                       <p className="text-lg font-bold text-zinc-900 dark:text-white group-hover:underline">+62 812 3456 7890</p>
-                    </a>
-                 </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white">
+                    <FaEnvelope />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Email Me</p>
+                    <p className="text-lg font-bold text-zinc-900 dark:text-white">divinka@example.com</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+                    <FaWhatsapp />
+                  </div>
+                  <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" className="group">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">WhatsApp</p>
+                    <p className="text-lg font-bold text-zinc-900 dark:text-white group-hover:underline">+62 812 3456 7890</p>
+                  </a>
+                </div>
               </div>
             </motion.div>
 
             <motion.div variants={itemVariants} className="flex flex-col justify-between gap-12">
-               <div className="space-y-6">
-                  <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Connect with me</h3>
-                  <div className="flex flex-wrap gap-4">
-                     {[
-                       { name: 'GitHub', icon: FaGithub, color: 'hover:text-zinc-900 dark:hover:text-white', url: '#' },
-                       { name: 'LinkedIn', icon: FaLinkedin, color: 'hover:text-[#0077b5]', url: '#' },
-                       { name: 'YouTube', icon: FaYoutube, color: 'hover:text-[#ff0000]', url: '#' },
-                     ].map((social) => (
-                       <motion.a
-                         key={social.name}
-                         href={social.url}
-                         target="_blank"
-                         rel="noreferrer"
-                         whileHover={{ y: -5, scale: 1.1 }}
-                         whileTap={{ scale: 0.95 }}
-                         className={clsx(
-                           "flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-2xl text-zinc-400 shadow-sm transition-all dark:border-zinc-800 dark:bg-zinc-950",
-                           social.color
-                         )}
-                       >
-                         <social.icon />
-                       </motion.a>
-                     ))}
-                  </div>
-               </div>
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Connect with me</h3>
+                <div className="flex flex-wrap gap-4">
+                  {[
+                    { name: 'GitHub', icon: FaGithub, color: 'hover:text-zinc-900 dark:hover:text-white', url: '#' },
+                    { name: 'LinkedIn', icon: FaLinkedin, color: 'hover:text-[#0077b5]', url: '#' },
+                    { name: 'YouTube', icon: FaYoutube, color: 'hover:text-[#ff0000]', url: '#' },
+                  ].map((social) => (
+                    <motion.a
+                      key={social.name}
+                      href={social.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ y: -5, scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={clsx(
+                        "flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-2xl text-zinc-400 shadow-sm transition-all dark:border-zinc-800 dark:bg-zinc-950",
+                        social.color
+                      )}
+                    >
+                      <social.icon />
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
 
-               <motion.a 
-                 href="mailto:divinka@example.com"
-                 whileHover={{ scale: 1.02 }}
-                 whileTap={{ scale: 0.98 }}
-                 className="group relative flex items-center justify-center gap-3 overflow-hidden rounded-2xl bg-zinc-900 px-8 py-5 text-lg font-bold text-white transition-all hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-2xl shadow-zinc-200/50 dark:shadow-none"
-               >
-                 <span>Start a Conversation</span>
-                 <FaArrowRight className="transition-transform group-hover:translate-x-1" />
-               </motion.a>
+              <div className="space-y-6 pt-12 border-t border-zinc-100 dark:border-zinc-800">
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Send a quick message</h3>
+                <div className="space-y-4">
+                  <ContactInput
+                    label="Name"
+                    placeholder="Enter your name"
+                    icon={<FaUser />}
+                    value={contactName}
+                    onChange={setContactName}
+                  />
+                  <ContactInput
+                    label="Message"
+                    placeholder="What's on your mind?"
+                    type="textarea"
+                    maxLength={250}
+                    icon={<FaCommentDots />}
+                    value={contactMessage}
+                    onChange={setContactMessage}
+                  />
+                </div>
+              </div>
+
+              <motion.a
+                href={`mailto:divinka@example.com?subject=Message from ${contactName}&body=${contactMessage}`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative flex items-center justify-center gap-3 overflow-hidden rounded-2xl bg-zinc-900 px-8 py-5 text-lg font-bold text-white transition-all hover:bg-black dark:bg-white dark:text-black dark:hover:bg-zinc-200 shadow-2xl shadow-zinc-200/50 dark:shadow-none"
+              >
+                <span>Start a Conversation</span>
+                <FaArrowRight className="transition-transform group-hover:translate-x-1" />
+              </motion.a>
             </motion.div>
           </div>
         </motion.section>
@@ -549,4 +667,4 @@ export default function App() {
       </footer>
     </div>
   )
-}
+}
