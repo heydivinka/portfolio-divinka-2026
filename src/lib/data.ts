@@ -11,13 +11,14 @@ export const education: TimelineEntry[] = [
     subtitle: 'SMK Negeri 1 Ciomas',
     highlight: 'Software and Game Development',
     iconType: 'school',
-    logo: 'https://api.dicebear.com/7.x/initials/svg?seed=SMK',
+    logo: '/smk-logo.png',
   },
   {
     date: '2021 - 2024',
     title: 'Junior Highschool',
     subtitle: 'SMP Negeri 14 Kota Bogor',
     iconType: 'school',
+    logo: '/smp-logo.png',
   },
 ]
 
@@ -26,15 +27,19 @@ export const experience: TimelineEntry[] = [
     date: 'Jan - Apr 2026',
     title: 'Cohort Coding Camp 2026',
     subtitle: 'Coding Camp powered by DBS Foundation',
+    highlight: 'Bootcamp',
     description: 'Berkolaborasi dengan tim Capstone untuk menyelesaikan masalah UI/UX pada situs Agrikultur digital.',
     iconType: 'work',
+    logo: '/cc-logo.png',
   },
   {
     date: 'Jan - Apr 2025',
     title: 'Cohort Coding Camp 2025',
     subtitle: 'Coding Camp powered by DBS Foundation',
+    highlight: 'Bootcamp',
     description: 'Berkolaborasi dengan tim Capstone untuk menyelesaikan masalah pada Financial technology yang ada di Indonesia.',
     iconType: 'work',
+    logo: '/cc-logo.png',
   },
 ]
 

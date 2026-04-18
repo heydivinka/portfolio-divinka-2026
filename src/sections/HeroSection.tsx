@@ -15,7 +15,6 @@ export function HeroSection() {
   const heroSubOpacity = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [1, 0.85, 0.45, 0.1])
   const heroSubSaturate = useTransform(scrollYProgress, [0, 1], [1, 0.35])
   const heroSubFilter = useMotionTemplate`saturate(${heroSubSaturate})`
-  const heroParallaxY = useTransform(scrollYProgress, [0, 1], [0, 150])
 
   useEffect(() => {
     let index = 0
@@ -44,6 +43,7 @@ export function HeroSection() {
           <h1 className="mt-8 max-w-xl text-3xl font-semibold leading-snug text-zinc-950 dark:text-zinc-50 sm:mt-10 sm:text-5xl">
             <span className="typing-caret">{typedTitle}</span>
           </h1>
+
           <motion.div style={{ opacity: heroSubOpacity, filter: heroSubFilter }}>
             <motion.p variants={itemVariants} className="mt-8 max-w-2xl text-base text-zinc-600 dark:text-zinc-400 sm:text-lg leading-relaxed">
               Full-stack developer focused on TypeScript, React, and Node.js with clean motion and
@@ -61,21 +61,22 @@ export function HeroSection() {
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Profile Image - Reverted to Right on Desktop, Center on Mobile */}
         <motion.div
           variants={itemVariants}
           initial={{ opacity: 0, x: 30, scale: 0.95 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
+          transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
           whileHover={{ scale: 1.05 }}
           className="w-full max-w-[200px] sm:max-w-[220px] lg:max-w-[250px] mx-auto lg:ml-auto shrink-0 mt-12 lg:mt-0"
-          style={{ y: heroParallaxY }}
         >
           <div className="rounded-[22px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-zinc-700 dark:bg-zinc-800 hover:shadow-xl hover:shadow-zinc-400/50 transition-all duration-300 dark:hover:shadow-zinc-600/50">
             <div className="aspect-[4/5] overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 hover:brightness-110 transition-all duration-500">
               <img
                 src="/profile.png"
                 alt="Divinka Profile"
-                className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                className="h-full w-full object-cover"
               />
             </div>
           </div>

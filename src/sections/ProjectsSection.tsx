@@ -54,15 +54,32 @@ export function ProjectsSection({
         )}
       </div>
 
-      {projects.length > visibleProjects && (
+      {projects.length > 6 && (
         <motion.div variants={itemVariants} className="mt-12 flex justify-center">
-          <button
-            onClick={() => setVisibleProjects(prev => prev + 3)}
-            className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:hover:border-zinc-600"
-          >
-            View More Projects
-            <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" />
-          </button>
+          {projects.length > visibleProjects ? (
+            <button
+              onClick={() => setVisibleProjects(prev => prev + 3)}
+              className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:hover:border-zinc-600"
+            >
+              View More Projects
+              <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setVisibleProjects(6)
+                const el = document.getElementById('projects')
+                if (el) {
+                  const y = el.getBoundingClientRect().top + window.pageYOffset - 100
+                  window.scrollTo({ top: y, behavior: 'smooth' })
+                }
+              }}
+              className="group relative flex items-center gap-2 rounded-full border border-zinc-200 bg-white/50 px-8 py-3 text-sm font-bold text-zinc-900 backdrop-blur transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:hover:border-zinc-600"
+            >
+              Show Less
+              <FaArrowRight className="text-xs transition-transform rotate-[270deg]" />
+            </button>
+          )}
         </motion.div>
       )}
     </motion.section>

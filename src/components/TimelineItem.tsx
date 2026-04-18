@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import { FaSchool, FaBriefcase } from 'react-icons/fa'
 
@@ -40,18 +39,32 @@ export function TimelineItem({ date, title, subtitle, description, iconType, hig
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="flex-1">
             <span className="mb-2 block text-[10px] font-bold tracking-widest text-zinc-400 sm:hidden">{date}</span>
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
-              {title}
-            </h3>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <p className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                {subtitle}
-              </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
+                {title}
+              </h3>
               {highlight && (
-                <span className="rounded-full bg-zinc-200/50 px-3 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300 border border-zinc-300/50 dark:border-zinc-700/50">
+                <span className="rounded-full bg-zinc-200/50 px-3 py-1 text-[10px] font-bold text-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300 border border-zinc-300/50 dark:border-zinc-700/50">
                   {highlight}
                 </span>
               )}
+            </div>
+            
+            <div className="mt-3 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                  {subtitle}
+                </p>
+                {logo && (
+                  <div className="h-5 w-5 shrink-0 overflow-hidden">
+                    <img 
+                      src={logo} 
+                      alt="Logo" 
+                      className="h-full w-full object-contain" 
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             {description && (
               <p className="mt-4 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 whitespace-pre-line">
@@ -59,14 +72,6 @@ export function TimelineItem({ date, title, subtitle, description, iconType, hig
               </p>
             )}
           </div>
-          
-          {logo && (
-            <div className="shrink-0">
-              <div className="h-12 w-12 overflow-hidden rounded-xl border border-zinc-200 bg-white p-2 dark:border-zinc-800 dark:bg-zinc-950">
-                <img src={logo} alt="Logo" className="h-full w-full object-contain" />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </motion.div>

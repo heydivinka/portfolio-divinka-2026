@@ -7,15 +7,23 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState('')
   const [isVisible, setIsVisible] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const timerRef = useRef<number | null>(null)
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id)
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 120
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      const offset = 80 
+      const bodyRect = document.body.getBoundingClientRect().top
+      const elementRect = el.getBoundingClientRect().top
+      const elementPosition = elementRect - bodyRect
+      const offsetPosition = elementPosition - offset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
     }
-    setIsOpen(false)
+    // Removed setIsOpen(false) as per user request to let them focus/close manually
   }
 
   const links = React.useMemo(() => [
@@ -29,7 +37,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerWidth < 640) return
+      if (window.innerWidth < 640 || isOpen) return // Don't hide if mobile or menu is open
       setIsVisible(true)
       if (timerRef.current) clearTimeout(timerRef.current)
       timerRef.current = setTimeout(() => {
@@ -38,7 +46,7 @@ export function Navbar() {
     }
 
     const checkMobile = () => {
-      if (window.innerWidth < 640) {
+      if (window.innerWidth < 640 || isOpen) {
         setIsVisible(true)
       } else {
         // Initial hint on desktop
@@ -58,7 +66,7 @@ export function Navbar() {
       window.removeEventListener('scroll', handleScroll)
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [])
+  }, [isOpen])
 
   useEffect(() => {
     const options = {
@@ -207,9 +215,13 @@ export function Navbar() {
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: idx * 0.05 }}
-                        onClick={() => scrollTo(link.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          scrollTo(link.id)
+                        }}
+                        style={{ touchAction: 'manipulation' }}
                         className={clsx(
-                          'relative w-full rounded-2xl px-4 py-3 text-left transition-colors duration-300 outline-none',
+                          'relative w-full rounded-2xl px-4 py-3 text-left transition-colors duration-300 outline-none select-none',
                           activeSection === link.id ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-950 dark:text-white' : 'text-zinc-500 dark:text-zinc-400'
                         )}
                       >
