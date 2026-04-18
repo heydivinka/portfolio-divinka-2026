@@ -1,5 +1,6 @@
 import { motion, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import emailjs from '@emailjs/browser'
 import { FaMoon, FaSun } from 'react-icons/fa'
 
 // Components
@@ -92,6 +93,7 @@ export default function App() {
       email: contactEmail.trim(),
       message: contactMessage.trim(),
     })
+
     if (error) {
       console.error('Submit error:', error)
       setSubmitStatus('error')
@@ -102,6 +104,29 @@ export default function App() {
         message: 'Something went wrong while sending your message. Please try again later or contact me via WhatsApp.'
       })
     } else {
+      // Send Email Notification via EmailJS
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+      if (serviceId && templateId && publicKey && serviceId !== 'your_service_id') {
+        emailjs.send(
+          serviceId,
+          templateId,
+          {
+            name: contactName.trim(),
+            email: contactEmail.trim(),
+            message: contactMessage.trim(),
+            title: `New Portfolio Message from ${contactName.trim()}`,
+            time: new Date().toLocaleString()
+          },
+          publicKey
+        ).then(
+          () => console.log('Email notification sent successfully'),
+          (err) => console.error('EmailJS error:', err)
+        )
+      }
+
       setSubmitStatus('success')
       setContactName('')
       setContactEmail('')
