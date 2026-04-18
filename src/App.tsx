@@ -24,6 +24,7 @@ import { SectionTitle } from './components/SectionTitle'
 import { CustomCursor } from './components/CustomCursor'
 import { ProjectCard } from './components/ProjectCard'
 import { SkillCard } from './components/SkillCard'
+import { TimelineItem } from './components/TimelineItem'
 
 type SkillCategory = {
   title: string
@@ -36,6 +37,50 @@ type Project = {
   tech: string[]
   url: string
 }
+
+type TimelineEntry = {
+  date: string
+  title: string
+  subtitle: string
+  description?: string
+  iconType: 'school' | 'work'
+  highlight?: string
+  logo?: string
+}
+
+const education: TimelineEntry[] = [
+  {
+    date: '2024 - Present',
+    title: 'Vocational Highschool',
+    subtitle: 'SMK Negeri 1 Ciomas',
+    highlight: 'Software and Game Development',
+    iconType: 'school',
+    logo: 'https://api.dicebear.com/7.x/initials/svg?seed=SMK',
+  },
+  {
+    date: '2021 - 2024',
+    title: 'Junior Highschool',
+    subtitle: 'SMP Negeri 14 Kota Bogor',
+    iconType: 'school',
+  },
+]
+
+const experience: TimelineEntry[] = [
+  {
+    date: 'Jan - Apr 2026',
+    title: 'Cohort Coding Camp 2026',
+    subtitle: 'Coding Camp powered by DBS Foundation',
+    description: 'Berkolaborasi dengan tim Capstone untuk menyelesaikan masalah UI/UX pada situs Agrikultur digital.',
+    iconType: 'work',
+  },
+  {
+    date: 'Jan - Apr 2025',
+    title: 'Cohort Coding Camp 2025',
+    subtitle: 'Coding Camp powered by DBS Foundation',
+    description: 'Berkolaborasi dengan tim Capstone untuk menyelesaikan masalah pada situs Agrikultur digital di Indonesia.',
+    iconType: 'work',
+  },
+]
 
 const skillCategories: SkillCategory[] = [
   { title: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
@@ -84,20 +129,30 @@ const techMarquee = [
 ]
 
 const container = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.55,
-      staggerChildren: 0.12,
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
     },
   },
 }
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1, 
+    filter: 'blur(0px)',
+    transition: { 
+      type: 'spring',
+      damping: 25,
+      stiffness: 100,
+      duration: 0.8
+    } 
+  },
 }
 
 export default function App() {
@@ -233,7 +288,7 @@ export default function App() {
         </motion.section>
 
         <motion.section
-          className="mt-12 sm:mt-16 rounded-3xl border border-zinc-200 bg-white/80 py-6 px-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70"
+          className="mt-12 sm:mt-16 py-8"
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -246,9 +301,9 @@ export default function App() {
                   {group.map((tech) => {
                     const Icon = tech.icon
                     return (
-                      <div key={`${tech.name}-${groupIndex}`} className="logo-chip">
-                        <Icon className={clsx('text-lg', tech.color)} />
-                        <span className="text-zinc-700 dark:text-zinc-200">{tech.name}</span>
+                      <div key={`${tech.name}-${groupIndex}`} className="logo-rect">
+                        <Icon className={clsx('text-2xl', tech.color)} />
+                        <span className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">{tech.name}</span>
                       </div>
                     )
                   })}
@@ -256,6 +311,38 @@ export default function App() {
               ))}
             </div>
           </motion.div>
+        </motion.section>
+
+        <motion.section
+          id="education"
+          className="mt-24 sm:mt-32"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          <SectionTitle title="Education" subtitle="My academic journey and specialized training." />
+          <div className="mx-auto max-w-4xl">
+            {education.map((item, idx) => (
+              <TimelineItem key={idx} {...item} variants={item} />
+            ))}
+          </div>
+        </motion.section>
+
+        <motion.section
+          id="experience"
+          className="mt-24 sm:mt-32"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          <SectionTitle title="Experience" subtitle="Professional projects and collaborations." />
+          <div className="mx-auto max-w-4xl">
+            {experience.map((item, idx) => (
+              <TimelineItem key={idx} {...item} variants={item} />
+            ))}
+          </div>
         </motion.section>
 
         <motion.section
@@ -361,22 +448,52 @@ export default function App() {
         >
           <SectionTitle title="Contact" subtitle="Let's collaborate on your next product." />
           <motion.div variants={item} className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <a className="contact-card" href="mailto:youremail@example.com">
+            <motion.a 
+              variants={item}
+              whileHover={{ y: -5, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="contact-card" 
+              href="mailto:youremail@example.com"
+            >
               <FaEnvelope />
               <span className="hover-underline">youremail@example.com</span>
-            </a>
-            <a className="contact-card" href="https://github.com" target="_blank" rel="noreferrer">
+            </motion.a>
+            <motion.a 
+              variants={item}
+              whileHover={{ y: -5, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="contact-card" 
+              href="https://github.com" 
+              target="_blank" 
+              rel="noreferrer"
+            >
               <FaGithub />
               <span className="hover-underline">GitHub</span>
-            </a>
-            <a className="contact-card" href="https://linkedin.com" target="_blank" rel="noreferrer">
+            </motion.a>
+            <motion.a 
+              variants={item}
+              whileHover={{ y: -5, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="contact-card" 
+              href="https://linkedin.com" 
+              target="_blank" 
+              rel="noreferrer"
+            >
               <FaLinkedin />
               <span className="hover-underline">LinkedIn</span>
-            </a>
-            <a className="contact-card" href="https://youtube.com" target="_blank" rel="noreferrer">
+            </motion.a>
+            <motion.a 
+              variants={item}
+              whileHover={{ y: -5, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="contact-card" 
+              href="https://youtube.com" 
+              target="_blank" 
+              rel="noreferrer"
+            >
               <FaYoutube />
               <span className="hover-underline">YouTube</span>
-            </a>
+            </motion.a>
           </motion.div>
         </motion.section>
       </motion.main>

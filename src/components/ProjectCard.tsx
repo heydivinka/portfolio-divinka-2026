@@ -20,10 +20,12 @@ export function ProjectCard({ project, index, variants }: ProjectCardProps) {
   return (
     <motion.a
       variants={variants}
+      whileHover={{ y: -10, scale: 1.01 }}
+      whileTap={{ scale: 0.98 }}
       href={project.url}
       className={clsx(
-        'group rounded-3xl border border-zinc-200 bg-white/75 p-6 sm:p-8 backdrop-blur transition dark:border-zinc-800 dark:bg-zinc-900/70',
-        'hover:-translate-y-2 hover:border-zinc-400 hover:bg-white hover:shadow-xl hover:shadow-zinc-200/50 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:shadow-black/50',
+        'group rounded-3xl border border-zinc-200 bg-white/75 p-6 sm:p-8 backdrop-blur transition-all duration-500 dark:border-zinc-800 dark:bg-zinc-900/70',
+        'hover:border-zinc-400 hover:bg-white hover:shadow-2xl hover:shadow-zinc-200/50 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:shadow-black/50',
         index === 0 && 'sm:col-span-2 xl:col-span-1',
       )}
     >

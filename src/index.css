@@ -118,8 +118,8 @@ body {
 
 .logo-marquee-viewport {
   overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
 }
 
 .logo-marquee-track {
@@ -137,22 +137,33 @@ body {
   align-items: center;
 }
 
-.logo-chip {
+.logo-rect {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  margin-right: 0.75rem;
-  border-radius: 9999px;
-  border: 1px solid rgb(212 212 216);
-  background: rgb(255 255 255 / 0.95);
-  padding: 0.5rem 0.85rem;
-  font-size: 0.82rem;
+  gap: 1rem;
+  margin-right: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(228 228 231);
+  background: rgb(255 255 255 / 0.5);
+  padding: 1rem 1.5rem;
   white-space: nowrap;
+  transition: all 0.3s ease;
 }
 
-.dark .logo-chip {
-  border-color: rgb(63 63 70);
-  background: rgb(39 39 42 / 0.8);
+.dark .logo-rect {
+  border-color: rgb(39 39 42);
+  background: rgb(24 24 27 / 0.4);
+}
+
+.logo-rect:hover {
+  border-color: rgb(161 161 170);
+  background: rgb(255 255 255);
+  transform: translateY(-2px);
+}
+
+.dark .logo-rect:hover {
+  border-color: rgb(82 82 91);
+  background: rgb(24 24 27);
 }
 
 @keyframes logoFlow {
