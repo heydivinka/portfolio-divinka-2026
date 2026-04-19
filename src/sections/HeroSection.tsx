@@ -15,7 +15,7 @@ export function HeroSection() {
   const heroSubOpacity = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [1, 0.85, 0.45, 0.1])
   const heroSubSaturate = useTransform(scrollYProgress, [0, 1], [1, 0.35])
   const heroSubFilter = useMotionTemplate`saturate(${heroSubSaturate})`
-  
+
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.96])
   const heroTranslateY = useTransform(scrollYProgress, [0, 1], [0, 80])
   const imageTranslateY = useTransform(scrollYProgress, [0, 1], [0, -50])

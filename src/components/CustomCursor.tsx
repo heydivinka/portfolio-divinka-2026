@@ -48,11 +48,11 @@ export function CustomCursor() {
       />
       <motion.div
         className="pointer-events-none fixed left-0 top-0 z-[10000] rounded-full border border-white mix-blend-difference hidden sm:block"
-        style={{ 
-          x: cursorXSpring, 
-          y: cursorYSpring, 
-          translateX: '-50%', 
-          translateY: '-50%' 
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: '-50%',
+          translateY: '-50%'
         }}
         animate={{
           width: isHovering ? 60 : 30,
