@@ -70,8 +70,13 @@ export function CertificatesSection({
         )}
       </div>
 
-      {certificates.length > 6 && (
-        <motion.div variants={itemVariants} className="mt-12 flex justify-center">
+      {certificates.length > 3 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12 flex justify-center"
+        >
           {certificates.length > visibleCertificates ? (
             <button
               onClick={() => setVisibleCertificates(prev => prev + 3)}
@@ -83,7 +88,7 @@ export function CertificatesSection({
           ) : (
             <button
               onClick={() => {
-                setVisibleCertificates(6)
+                setVisibleCertificates(3)
                 const el = document.getElementById('certificates')
                 if (el) {
                   const y = el.getBoundingClientRect().top + window.pageYOffset - 100

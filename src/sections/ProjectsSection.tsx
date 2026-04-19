@@ -54,8 +54,13 @@ export function ProjectsSection({
         )}
       </div>
 
-      {projects.length > 6 && (
-        <motion.div variants={itemVariants} className="mt-12 flex justify-center">
+      {projects.length > 3 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12 flex justify-center"
+        >
           {projects.length > visibleProjects ? (
             <button
               onClick={() => setVisibleProjects(prev => prev + 3)}
@@ -67,7 +72,7 @@ export function ProjectsSection({
           ) : (
             <button
               onClick={() => {
-                setVisibleProjects(6)
+                setVisibleProjects(3)
                 const el = document.getElementById('projects')
                 if (el) {
                   const y = el.getBoundingClientRect().top + window.pageYOffset - 100
