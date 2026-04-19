@@ -49,6 +49,55 @@ body,
   scrollbar-color: #3f3f46 transparent;
 }
 
+/* Apple-style Vibrant Liquid Mesh Gradient */
+.apple-gradient {
+  position: relative;
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%),
+    radial-gradient(at 50% 0%, #7928ca 0px, transparent 50%),
+    radial-gradient(at 100% 0%, #00dfd8 0px, transparent 50%),
+    radial-gradient(at 0% 100%, #0070f3 0px, transparent 50%),
+    radial-gradient(at 100% 100%, #f9cb28 0px, transparent 50%);
+  background-size: 200% 200%;
+  animation: liquid-mesh 10s ease-in-out infinite alternate;
+  transition: background-color 0.5s ease;
+}
+
+.dark .apple-gradient {
+  background-color: #000000;
+  background-image: 
+    radial-gradient(at 0% 0%, #4e0baf 0px, transparent 50%),
+    radial-gradient(at 50% 0%, #001242 0px, transparent 50%),
+    radial-gradient(at 100% 0%, #ff0080 0px, transparent 50%),
+    radial-gradient(at 0% 100%, #000000 0px, transparent 50%),
+    radial-gradient(at 100% 100%, #1e1b4b 0px, transparent 50%);
+}
+
+@keyframes liquid-mesh {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+@keyframes apple-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 body {
   margin: 0;
   font-family:

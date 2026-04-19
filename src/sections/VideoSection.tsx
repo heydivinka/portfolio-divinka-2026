@@ -10,7 +10,7 @@ export function VideoSection() {
       variants={containerVariants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.25 }}
+      viewport={{ amount: 0.25 }}
     >
       <SectionTitle
         title="Featured YouTube Video"

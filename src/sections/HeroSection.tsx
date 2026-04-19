@@ -15,6 +15,11 @@ export function HeroSection() {
   const heroSubOpacity = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [1, 0.85, 0.45, 0.1])
   const heroSubSaturate = useTransform(scrollYProgress, [0, 1], [1, 0.35])
   const heroSubFilter = useMotionTemplate`saturate(${heroSubSaturate})`
+  
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.96])
+  const heroTranslateY = useTransform(scrollYProgress, [0, 1], [0, 80])
+  const imageTranslateY = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const imageRotate = useTransform(scrollYProgress, [0, 1], [0, 8])
 
   useEffect(() => {
     let index = 0
@@ -30,10 +35,12 @@ export function HeroSection() {
   return (
     <motion.section
       ref={heroSectionRef}
+      style={{ scale: heroScale, y: heroTranslateY }}
       className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10 lg:p-14"
       variants={containerVariants}
       initial="hidden"
-      animate="show"
+      whileInView="show"
+      viewport={{ amount: 0.1 }}
     >
       <div className="mx-auto w-full max-w-6xl lg:flex lg:items-start lg:gap-12">
         <div className="lg:flex-1">
@@ -67,6 +74,7 @@ export function HeroSection() {
           variants={itemVariants}
           initial={{ opacity: 0, x: 30, scale: 0.95 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
+          style={{ y: imageTranslateY, rotate: imageRotate }}
           transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
           whileHover={{ scale: 1.05 }}
           className="w-full max-w-[200px] sm:max-w-[220px] lg:max-w-[250px] mx-auto lg:ml-auto shrink-0 mt-12 lg:mt-0"

@@ -1,5 +1,7 @@
 import { motion, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import Lenis from 'lenis'
+import 'lenis/dist/lenis.css'
 import emailjs from '@emailjs/browser'
 import { FaMoon, FaSun } from 'react-icons/fa'
 
@@ -18,6 +20,7 @@ import { ProjectsSection } from './sections/ProjectsSection'
 import { CertificatesSection } from './sections/CertificatesSection'
 import { ContactSection } from './sections/ContactSection'
 import { ConfirmationModal } from './components/ConfirmationModal'
+import { Footer } from './components/Footer'
 import { StatusModal } from './components/StatusModal'
 
 // Lib
@@ -183,6 +186,30 @@ export default function App() {
   }, [contactMessage])
 
   useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
+    })
+
+    function raf(time: number) {
+      lenis.raf(time)
+      requestAnimationFrame(raf)
+    }
+
+    requestAnimationFrame(raf)
+
+    return () => {
+      lenis.destroy()
+    }
+  }, [])
+
+  useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme === 'dark') {
       setIsDark(true)
@@ -202,6 +229,12 @@ export default function App() {
     <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors dark:bg-zinc-950 dark:text-zinc-100">
       <Navbar />
       <CustomCursor />
+      
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-zinc-900 dark:bg-zinc-100 z-[10002] origin-left"
+        style={{ scaleX: pageScrollYProgress, backgroundColor: '#f5c414' }}
+      />
 
       <div className="soft-cursor-light pointer-events-none fixed inset-0 dark:hidden" />
       <div className="soft-cursor-dark pointer-events-none fixed inset-0 hidden dark:block" />
@@ -278,11 +311,8 @@ export default function App() {
           submitStatus={submitStatus}
           formErrors={formErrors}
         />
+        <Footer />
       </motion.main>
-
-      <footer className="relative mt-20 border-t border-zinc-200 py-12 text-center text-sm font-medium text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-        <p>© {new Date().getFullYear()} Divinka. Crafted with React, TypeScript, Tailwind, and Framer Motion.</p>
-      </footer>
 
       <ConfirmationModal
         isOpen={isModalOpen}

@@ -12,7 +12,7 @@ export function ExperienceSection() {
       variants={containerVariants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ amount: 0.2 }}
     >
       <SectionTitle title="Experience" subtitle="Professional projects and collaborations." variants={itemVariants} />
       <div className="mx-auto max-w-4xl">

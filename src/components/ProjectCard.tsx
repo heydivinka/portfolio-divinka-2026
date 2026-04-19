@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { clsx } from 'clsx'
 import { FaExternalLinkAlt } from 'react-icons/fa'
+import { useRef } from 'react'
 
 interface Project {
   title: string
@@ -17,8 +18,22 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index, variants }: ProjectCardProps) {
+  const ref = useRef<HTMLAnchorElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['0 1', '1.33 1'],
+  })
+
+  const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1])
+  const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.6, 1])
+
   return (
     <motion.a
+      ref={ref}
+      style={{
+        scale: scaleProgress,
+        opacity: opacityProgress,
+      }}
       variants={variants}
       initial="hidden"
       animate="show"

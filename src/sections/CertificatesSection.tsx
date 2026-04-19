@@ -25,7 +25,7 @@ export function CertificatesSection({
       variants={containerVariants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ amount: 0.2 }}
     >
       <SectionTitle
         title="Certificates"

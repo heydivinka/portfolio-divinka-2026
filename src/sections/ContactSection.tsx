@@ -38,7 +38,7 @@ export function ContactSection({
       variants={containerVariants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ amount: 0.2 }}
     >
       <div className="absolute inset-0 -z-10 opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
         <div className="absolute left-1/4 top-0 h-full w-px bg-zinc-950 dark:bg-white" />
