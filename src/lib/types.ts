@@ -1,6 +1,13 @@
+export type SkillItem = {
+  name: string
+  progress: number
+}
+
 export type SkillCategory = {
   title: string
-  items: string[]
+  icon?: string
+  color?: string
+  items: SkillItem[]
 }
 
 export type Project = {

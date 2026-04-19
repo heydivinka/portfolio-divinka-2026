@@ -78,7 +78,7 @@ export function HeroSection() {
           style={{ y: imageTranslateY, rotate: imageRotate }}
           transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
           whileHover={{ scale: 1.05 }}
-          className="w-full max-w-[200px] sm:max-w-[220px] lg:max-w-[250px] mx-auto lg:ml-auto shrink-0 mt-12 lg:mt-0"
+          className="w-full max-w-[230px] sm:max-w-[260px] lg:max-w-[300px] mx-auto lg:ml-auto shrink-0 mt-12 lg:mt-0"
         >
           <div className="rounded-[22px] border border-zinc-300/80 bg-zinc-100 p-2 shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-zinc-700 dark:bg-zinc-800 hover:shadow-xl hover:shadow-zinc-400/50 transition-all duration-300 dark:hover:shadow-zinc-600/50">
             <div className="aspect-[4/5] overflow-hidden rounded-xl border border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 hover:brightness-110 transition-all duration-500">

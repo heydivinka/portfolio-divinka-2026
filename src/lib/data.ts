@@ -44,9 +44,35 @@ export const experience: TimelineEntry[] = [
 ]
 
 export const skillCategories: SkillCategory[] = [
-  { title: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { title: 'Backend', items: ['Node.js', 'Express', 'REST API'] },
-  { title: 'Tooling', items: ['Git', 'Vite', 'Figma', 'Postman'] },
+  {
+    title: 'Frontend',
+    color: 'blue',
+    items: [
+      { name: 'React', progress: 90 },
+      { name: 'TypeScript', progress: 85 },
+      { name: 'Tailwind CSS', progress: 95 },
+      { name: 'Framer Motion', progress: 80 },
+    ],
+  },
+  {
+    title: 'Backend',
+    color: 'green',
+    items: [
+      { name: 'Node.js', progress: 80 },
+      { name: 'Express', progress: 75 },
+      { name: 'REST API', progress: 85 },
+    ],
+  },
+  {
+    title: 'Tooling',
+    color: 'amber',
+    items: [
+      { name: 'Git', progress: 85 },
+      { name: 'Vite', progress: 90 },
+      { name: 'Figma', progress: 70 },
+      { name: 'Postman', progress: 80 },
+    ],
+  },
 ]
 
 export const techMarquee = [
