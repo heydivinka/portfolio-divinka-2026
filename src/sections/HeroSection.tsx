@@ -34,9 +34,10 @@ export function HeroSection() {
 
   return (
     <motion.section
+      id="hero"
       ref={heroSectionRef}
-      style={{ scale: heroScale, y: heroTranslateY }}
-      className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/75 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/70 sm:p-10 lg:p-14"
+      style={{ scale: heroScale, y: heroTranslateY, transform: 'translateZ(0)' }}
+      className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/20 p-6 shadow-soft backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/30 sm:p-10 lg:p-14 will-change-transform"
       variants={containerVariants}
       initial="hidden"
       whileInView="show"

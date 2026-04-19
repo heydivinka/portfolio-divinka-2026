@@ -19,10 +19,10 @@ export function Footer() {
     >
       <div className="mx-auto max-w-7xl px-6">
         {/* Call to Action Section with Vibrant Liquid Mesh Gradient */}
-        <div className="apple-gradient relative overflow-hidden rounded-[3rem] px-8 py-20 text-center sm:px-16 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-          {/* Glass Overlay for Text Readability */}
-          <div className="absolute inset-0 bg-white/30 backdrop-blur-[80px] dark:bg-black/40" />
-          
+        <div className="apple-gradient relative overflow-hidden rounded-[3rem] px-8 py-20 text-center sm:px-16 border border-zinc-200 dark:border-zinc-800 shadow-2xl will-change-transform">
+          {/* Glass Overlay for Text Readability - Optimized Blur */}
+          <div className="absolute inset-0 bg-white/30 backdrop-blur-[40px] dark:bg-black/40" />
+
           <motion.div variants={itemVariants} className="relative z-10">
             <h2 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white sm:text-6xl">
               Ready to build <br className="sm:hidden" /> something <br className="hidden sm:block" />
@@ -90,6 +90,21 @@ export function Footer() {
                 <li key={item}>
                   <a
                     href={`#${item.toLowerCase()}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const el = document.getElementById(item.toLowerCase());
+                      if (el) {
+                        const offset = 80;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = el.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        
+                        window.scrollTo({
+                          top: elementPosition - offset,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }}
                     className="hover-underline text-sm font-bold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                   >
                     {item}
@@ -103,17 +118,19 @@ export function Footer() {
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">Socials</h4>
             <ul className="space-y-4">
               {[
-                { name: 'GitHub', icon: FaGithub, url: '#' },
-                { name: 'LinkedIn', icon: FaLinkedin, url: '#' },
-                { name: 'YouTube', icon: FaYoutube, url: '#' },
+                { name: 'GitHub', icon: FaGithub, url: 'https://github.com/heydivinka' },
+                { name: 'LinkedIn', icon: FaLinkedin, url: 'https://www.linkedin.com/in/divinka-azani-3a64b2354/' },
+                { name: 'YouTube', icon: FaYoutube, url: 'https://www.youtube.com/@__divinka' },
               ].map((social) => (
                 <li key={social.name}>
                   <a
                     href={social.url}
-                    className="hover-underline inline-flex items-center gap-2 text-sm font-bold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover-underline flex flex-row items-center gap-3 whitespace-nowrap text-sm font-bold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                   >
-                    <social.icon className="text-base" />
-                    {social.name}
+                    <social.icon className="text-base shrink-0" />
+                    <span>{social.name}</span>
                   </a>
                 </li>
               ))}

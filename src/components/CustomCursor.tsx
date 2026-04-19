@@ -43,12 +43,24 @@ export function CustomCursor() {
   return (
     <>
       <motion.div
-        className="cursor-dot hidden sm:block"
-        style={{ translateX: cursorX, translateY: cursorY, x: '-50%', y: '-50%' }}
+        className="pointer-events-none fixed left-0 top-0 z-[10001] h-1.5 w-1.5 rounded-full bg-white mix-blend-difference hidden sm:block"
+        style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
       />
       <motion.div
-        className={clsx('cursor-outline hidden sm:block', isHovering && 'hovering')}
-        style={{ translateX: cursorXSpring, translateY: cursorYSpring, x: '-50%', y: '-50%' }}
+        className="pointer-events-none fixed left-0 top-0 z-[10000] rounded-full border border-white mix-blend-difference hidden sm:block"
+        style={{ 
+          x: cursorXSpring, 
+          y: cursorYSpring, 
+          translateX: '-50%', 
+          translateY: '-50%' 
+        }}
+        animate={{
+          width: isHovering ? 60 : 30,
+          height: isHovering ? 60 : 30,
+          opacity: isHovering ? 0.8 : 0.5,
+          backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0)'
+        }}
+        transition={{ type: 'spring', damping: 20, stiffness: 200 }}
       />
     </>
   )

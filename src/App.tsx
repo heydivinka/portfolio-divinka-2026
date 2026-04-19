@@ -21,6 +21,7 @@ import { CertificatesSection } from './sections/CertificatesSection'
 import { ContactSection } from './sections/ContactSection'
 import { ConfirmationModal } from './components/ConfirmationModal'
 import { Footer } from './components/Footer'
+import { BackgroundBlobs } from './components/BackgroundBlobs'
 import { StatusModal } from './components/StatusModal'
 
 // Lib
@@ -187,12 +188,12 @@ export default function App() {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 1.2,
       touchMultiplier: 2,
       infinite: false,
     })
@@ -226,7 +227,11 @@ export default function App() {
   }, [isDark])
 
   return (
-    <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="relative min-h-screen text-zinc-900 transition-colors dark:text-zinc-100">
+      {/* Base Background Layer */}
+      <div className="fixed inset-0 -z-20 bg-zinc-100 transition-colors dark:bg-zinc-950" />
+      
+      <BackgroundBlobs />
       <Navbar />
       <CustomCursor />
       

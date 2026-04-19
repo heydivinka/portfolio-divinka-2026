@@ -34,7 +34,7 @@ export function ContactSection({
   return (
     <motion.section
       id="contact"
-      className="relative mt-24 sm:mt-32 overflow-hidden rounded-[3rem] border border-zinc-200 bg-white/50 p-8 sm:p-20 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/50"
+      className="relative mt-24 sm:mt-32 overflow-hidden rounded-[3rem] border border-zinc-200 bg-white/20 p-8 sm:p-20 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/30"
       variants={containerVariants}
       initial="hidden"
       whileInView="show"
@@ -85,15 +85,15 @@ export function ContactSection({
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Connect with me</h3>
             <div className="flex flex-wrap gap-4">
               {[
-                { name: 'GitHub', icon: FaGithub, color: 'hover:text-zinc-900 dark:hover:text-white', url: '#' },
-                { name: 'LinkedIn', icon: FaLinkedin, color: 'hover:text-[#0077b5]', url: '#' },
-                { name: 'YouTube', icon: FaYoutube, color: 'hover:text-[#ff0000]', url: '#' },
+                { name: 'GitHub', icon: FaGithub, color: 'hover:text-zinc-900 dark:hover:text-white', url: 'https://github.com/heydivinka' },
+                { name: 'LinkedIn', icon: FaLinkedin, color: 'hover:text-[#0077b5]', url: 'https://www.linkedin.com/in/divinka-azani-3a64b2354/' },
+                { name: 'YouTube', icon: FaYoutube, color: 'hover:text-[#ff0000]', url: 'https://www.youtube.com/@__divinka' },
               ].map((social) => (
                 <motion.a
                   key={social.name}
                   href={social.url}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   whileHover={{ y: -5, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className={clsx(
