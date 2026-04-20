@@ -13,8 +13,8 @@ export function VideoSection() {
       viewport={{ amount: 0.25 }}
     >
       <SectionTitle
-        title="Featured YouTube Video"
-        subtitle="Embed your intro, walkthrough, or project demo here."
+        title="Introduction"
+        subtitle="A little bit of my Introduction..."
         variants={itemVariants}
       />
       <motion.div
