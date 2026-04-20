@@ -127,11 +127,13 @@ export function BackgroundBlobs() {
             width: blob.size, 
             height: blob.size, 
             willChange: 'transform',
-            filter: `blur(80px) drop-shadow(0 0 40px rgba(0,0,0,0.05))` 
+            // Removed expensive drop-shadow and reduced blur slightly for massive mobile performance gains
+            filter: 'blur(50px)' 
           }}
         >
-          <div className="absolute inset-[25%] rounded-full bg-white/20 blur-[40px] dark:bg-white/10" />
-          <div className="absolute inset-[40%] rounded-full bg-white/30 blur-[20px] dark:bg-white/20" />
+          {/* Hidden on mobile to save GPU rendering, visible on larger screens */}
+          <div className="absolute inset-[25%] rounded-full bg-white/20 blur-[40px] dark:bg-white/10 hidden sm:block" />
+          <div className="absolute inset-[40%] rounded-full bg-white/30 blur-[20px] dark:bg-white/20 hidden sm:block" />
         </div>
       ))}
     </div>
