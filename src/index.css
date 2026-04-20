@@ -36,7 +36,7 @@ body,
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f5c414 !important; /* Gold accent on hover */
+  background: #f5c414 !important;
 }
 
 /* Firefox Support */
@@ -63,7 +63,7 @@ body,
   animation: liquid-mesh 10s ease-in-out infinite alternate;
   transition: background-color 0.5s ease;
   will-change: background-position;
-  transform: translateZ(0); /* Force GPU acceleration */
+  transform: translateZ(0);
 }
 
 .dark .apple-gradient {
@@ -77,27 +77,15 @@ body,
 }
 
 @keyframes liquid-mesh {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 100%;
-  }
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 100%; }
 }
 
 @keyframes apple-gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 body {
@@ -112,7 +100,7 @@ body {
     Arial,
     sans-serif;
   @apply bg-zinc-100 dark:bg-zinc-950 leading-relaxed;
-  cursor: none !important; /* Hide default cursor everywhere */
+  cursor: none !important;
 }
 
 * {
@@ -178,39 +166,43 @@ body {
 }
 
 @keyframes ambientShift {
-  0% {
-    --x: 18%;
-    --y: 16%;
-  }
-  100% {
-    --x: 82%;
-    --y: 84%;
-  }
+  0% { --x: 18%; --y: 16%; }
+  100% { --x: 82%; --y: 84%; }
 }
 
 @keyframes typingCaret {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
+
+/* ─── Marquee ─────────────────────────────────────────── */
 
 .logo-marquee-viewport {
   overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  /* Fade edges left & right — preserves dark/light theme visually */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
 }
 
 .logo-marquee-track {
   display: flex;
   width: max-content;
-  animation: logoFlow 20s linear infinite;
+  animation: logoFlow 28s linear infinite;
 }
 
+/* Pause on hover of the whole row */
 .logo-marquee-viewport:hover .logo-marquee-track {
   animation-play-state: paused;
 }
@@ -220,51 +212,100 @@ body {
   align-items: center;
 }
 
+/* ─── Card base ───────────────────────────────────────── */
+
 .logo-rect {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  margin-right: 1.25rem;
-  border-radius: 0.75rem;
+  gap: 0.75rem;
+  margin-right: 1rem;
+  border-radius: 0.875rem;
   border: 1px solid rgb(228 228 231);
-  background: rgb(255 255 255 / 0.5);
-  padding: 1rem 1.5rem;
+  background: rgb(255 255 255 / 0.6);
+  padding: 0.875rem 1.375rem;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+  overflow: hidden;
 }
 
 .dark .logo-rect {
   border-color: rgb(39 39 42);
-  background: rgb(24 24 27 / 0.4);
+  background: rgb(24 24 27 / 0.5);
 }
 
-.logo-rect:hover {
-  border-color: rgb(161 161 170);
-  background: rgb(255 255 255);
-  transform: translateY(-2px);
+/* ─── Painter hover: radial spotlight follows cursor ─── */
+/*
+  We track --mx / --my via JS (onMouseMove).
+  The spotlight uses the card's --accent color (set inline per card).
+  mix-blend-mode: hard-light on the pseudo-element creates the
+  "inverted painter" feel without actually inverting each pixel,
+  keeping the design cohesive and theme-safe.
+*/
+
+.marquee-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    120px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 35%, transparent),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.dark .logo-rect:hover {
-  border-color: rgb(82 82 91);
-  background: rgb(24 24 27);
+.marquee-card:hover::before {
+  opacity: 1;
 }
+
+/* Lift the icon and label above the pseudo spotlight */
+.marquee-card .marquee-icon,
+.marquee-card .marquee-label {
+  position: relative;
+  z-index: 1;
+}
+
+/* On hover: icon brightens to its own accent color (already set inline),
+   label shifts to near-white in dark / near-black in light */
+.marquee-card:hover .marquee-label {
+  color: rgb(24 24 27); /* zinc-900 */
+}
+
+.dark .marquee-card:hover .marquee-label {
+  color: rgb(244 244 245); /* zinc-100 */
+}
+
+.marquee-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: rgb(255 255 255 / 0.92);
+  transform: translateY(-3px);
+}
+
+.dark .marquee-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: rgb(24 24 27 / 0.9);
+}
+
+/* ─── Keyframes ───────────────────────────────────────── */
 
 @keyframes logoFlow {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 @media (max-width: 640px) {
   .logo-marquee-track {
-    animation-duration: 24s;
+    animation-duration: 32s;
   }
 }
 
-/* Wavy Underline Container for H2 (excluding footer) */
+/* ─── Wavy Underline for H2 ───────────────────────────── */
+
 h2:not(footer h2) {
   position: relative;
   display: inline-block;

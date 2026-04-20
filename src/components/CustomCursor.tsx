@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
-import { clsx } from 'clsx'
 
 export function CustomCursor() {
   const cursorX = useMotionValue(-100)
   const cursorY = useMotionValue(-100)
-  const springConfig = { damping: 25, stiffness: 400, mass: 0.5 }
+  
+  // Spring configuration for the trailing big ball
+  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 }
   const cursorXSpring = useSpring(cursorX, springConfig)
   const cursorYSpring = useSpring(cursorY, springConfig)
+  
   const [isHovering, setIsHovering] = useState(false)
 
   useEffect(() => {
@@ -19,14 +21,12 @@ export function CustomCursor() {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      if (
-        target.tagName.toLowerCase() === 'a' ||
-        target.tagName.toLowerCase() === 'button' ||
-        target.closest('a') ||
-        target.closest('button') ||
-        target.classList.contains('hover-target') ||
-        target.classList.contains('hover-underline')
-      ) {
+      // Trigger the cursor scale effect on all text and interactive elements
+      const isTextOrInteractive = target.closest(
+        'a, button, h1, h2, h3, h4, h5, h6, p, span, li, label, strong, em, .hover-target, .hover-underline'
+      )
+      
+      if (isTextOrInteractive) {
         setIsHovering(true)
       } else {
         setIsHovering(false)
@@ -41,27 +41,41 @@ export function CustomCursor() {
   }, [cursorX, cursorY])
 
   return (
-    <>
+    <div className="pointer-events-none fixed inset-0 z-[10001] hidden sm:block mix-blend-difference overflow-hidden">
+      {/* Big Ball */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[10001] h-1.5 w-1.5 rounded-full bg-white mix-blend-difference hidden sm:block"
-        style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
-      />
-      <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[10000] rounded-full border border-white mix-blend-difference hidden sm:block"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
           translateX: '-50%',
           translateY: '-50%'
         }}
-        animate={{
-          width: isHovering ? 60 : 30,
-          height: isHovering ? 60 : 30,
-          opacity: isHovering ? 0.8 : 0.5,
-          backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0)'
+        className="absolute left-0 top-0 flex items-center justify-center"
+      >
+        <motion.div
+          animate={{ scale: isHovering ? 4 : 1 }}
+          transition={{ type: 'tween', ease: 'easeOut', duration: 0.3 }}
+        >
+          <svg height="30" width="30">
+            <circle cx="15" cy="15" r="12" fill="#f7f8fa" strokeWidth="0" />
+          </svg>
+        </motion.div>
+      </motion.div>
+
+      {/* Small Ball */}
+      <motion.div
+        style={{
+          x: cursorX,
+          y: cursorY,
+          translateX: '-50%',
+          translateY: '-50%'
         }}
-        transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-      />
-    </>
+        className="absolute left-0 top-0 flex items-center justify-center"
+      >
+        <svg height="10" width="10">
+          <circle cx="5" cy="5" r="4" fill="#f7f8fa" strokeWidth="0" />
+        </svg>
+      </motion.div>
+    </div>
   )
 }

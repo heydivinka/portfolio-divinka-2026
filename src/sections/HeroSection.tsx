@@ -19,7 +19,6 @@ export function HeroSection() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.96])
   const heroTranslateY = useTransform(scrollYProgress, [0, 1], [0, 80])
   const imageTranslateY = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const imageRotate = useTransform(scrollYProgress, [0, 1], [0, 8])
 
   useEffect(() => {
     let index = 0
@@ -70,12 +69,12 @@ export function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Profile Image - Reverted to Right on Desktop, Center on Mobile */}
+        {/* Profile Image */}
         <motion.div
           variants={itemVariants}
           initial={{ opacity: 0, x: 30, scale: 0.95 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
-          style={{ y: imageTranslateY, rotate: imageRotate }}
+          style={{ y: imageTranslateY }}
           transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
           whileHover={{ scale: 1.05 }}
           className="w-full max-w-[230px] sm:max-w-[260px] lg:max-w-[300px] mx-auto lg:ml-auto shrink-0 mt-12 lg:mt-0"

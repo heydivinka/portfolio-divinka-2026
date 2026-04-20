@@ -98,7 +98,7 @@ export function Footer() {
                         const bodyRect = document.body.getBoundingClientRect().top;
                         const elementRect = el.getBoundingClientRect().top;
                         const elementPosition = elementRect - bodyRect;
-                        
+
                         window.scrollTo({
                           top: elementPosition - offset,
                           behavior: 'smooth'
@@ -140,7 +140,7 @@ export function Footer() {
           <motion.div variants={itemVariants} className="space-y-6">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">Contact</h4>
             <p className="text-sm font-bold text-zinc-600 dark:text-zinc-400">
-              Surabaya, Indonesia <br />
+              Bogor, Indonesia <br />
               <a href="mailto:19.divinka@gmail.com" className="hover-underline mt-2 block">
                 19.divinka@gmail.com
               </a>

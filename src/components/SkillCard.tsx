@@ -125,10 +125,10 @@ export function SkillCard({ skill, variants, isActive = false }: SkillCardProps)
     colorKey === 'blue'
       ? 'text-sky-600 dark:text-sky-400'
       : colorKey === 'green'
-      ? 'text-emerald-600 dark:text-emerald-400'
-      : colorKey === 'amber'
-      ? 'text-amber-600 dark:text-amber-400'
-      : 'text-violet-600 dark:text-violet-400'
+        ? 'text-emerald-600 dark:text-emerald-400'
+        : colorKey === 'amber'
+          ? 'text-amber-600 dark:text-amber-400'
+          : 'text-violet-600 dark:text-violet-400'
 
   return (
     <motion.div

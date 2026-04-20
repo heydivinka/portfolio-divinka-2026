@@ -70,16 +70,32 @@ export function Navbar() {
 
   useEffect(() => {
     const options = {
-      rootMargin: '-10% 0px -60% 0px',
-      threshold: [0, 0.1],
+      rootMargin: '-10% 0px -20% 0px',
+      threshold: Array.from({ length: 21 }, (_, i) => i / 20), // 0, 0.05, 0.10, ..., 1.0
     }
+
+    const visibleSections = new Map<string, number>()
 
     const callback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id)
-        }
+        visibleSections.set(entry.target.id, entry.intersectionRatio)
       })
+
+      let maxRatio = 0
+      let maxId = ''
+
+      // Sort by order of links to break ties (preferring earlier sections if equal)
+      for (const link of links) {
+        const ratio = visibleSections.get(link.id) || 0
+        if (ratio > maxRatio) {
+          maxRatio = ratio
+          maxId = link.id
+        }
+      }
+
+      if (maxRatio > 0 && maxId) {
+        setActiveSection(maxId)
+      }
 
       const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100
       if (isAtBottom) {
