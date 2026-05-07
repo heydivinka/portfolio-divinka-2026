@@ -24,7 +24,7 @@ export function VideoSection() {
         <div className="aspect-video w-full">
           <iframe
             className="h-full w-full"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            src="https://www.youtube.com/embed/hc1qQkUM5Zo"
             title="Portfolio introduction video"
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
